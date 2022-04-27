@@ -1,7 +1,4 @@
-# SSCMS
-
-<img src="https://sscms.com/docs/v7/logo.png" height="220" align="center">
-<br /><br />
+基于sscms完善
 
 SSCMS 基于 .NET Core，能够以最低的成本、最少的人力投入在最短的时间内架设一个功能齐全、性能优异、规模庞大并易于维护的网站平台。
 
