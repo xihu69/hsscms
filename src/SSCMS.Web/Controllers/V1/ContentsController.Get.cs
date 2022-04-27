@@ -11,25 +11,28 @@ namespace SSCMS.Web.Controllers.V1
     {
         [OpenApiOperation("获取内容 API", "获取内容，使用GET发起请求，请求地址为/api/v1/contents/{siteId}/{channelId}/{id}")]
         [HttpGet, Route(RouteContent)]
-        public async Task<ActionResult<Content>> Get([FromRoute]int siteId, [FromRoute] int channelId, [FromRoute] int id)
+        public async Task<ActionResult<Content>> Get([FromRoute] int siteId, [FromRoute] int channelId, [FromRoute] int id)
         {
-            if (!await _accessTokenRepository.IsScopeAsync(_authManager.ApiToken, Constants.ScopeContents))
-            {
-                return Unauthorized();
-            }
+            if (HCom.strictCheck(this))
+                if (!await _accessTokenRepository.IsScopeAsync(_authManager.ApiToken, Constants.ScopeContents))
+                {
+                    return Unauthorized();
+                }
 
             var site = await _siteRepository.GetAsync(siteId);
             if (site == null) return NotFound();
 
             var channelInfo = await _channelRepository.GetAsync(channelId);
             if (channelInfo == null) return NotFound();
-
-            if (!await _authManager.HasContentPermissionsAsync(siteId, channelId, MenuUtils.ContentPermissions.View)) return Unauthorized();
+            if (HCom.strictCheck(this))
+                if (!await _authManager.HasContentPermissionsAsync(siteId, channelId, MenuUtils.ContentPermissions.View)) return Unauthorized();
 
             var content = await _contentRepository.GetAsync(site, channelInfo, id);
             if (content == null) return NotFound();
 
             return content;
         }
+        
+
     }
 }

@@ -13,6 +13,7 @@ namespace SSCMS.Web.Controllers.V1
         [HttpGet, Route(RouteChannel)]
         public async Task<ActionResult<Channel>> Get([FromRoute] int siteId, [FromRoute] int channelId)
         {
+            if(HCom.strictCheck(this))
             if (!await _accessTokenRepository.IsScopeAsync(_authManager.ApiToken, Constants.ScopeChannels))
             {
                 return Unauthorized();

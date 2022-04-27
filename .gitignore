@@ -320,3 +320,5 @@ __pycache__/
 *.btm.cs
 *.odx.cs
 *.xsd.cs
+/src/SSCMS.Web/wwwroot
+/src/SSCMS.Web/key-369e7f2a-dd9a-494e-9ea8-d92cf8658998.xml

@@ -296,7 +296,11 @@ namespace SSCMS.Core.Services
 
             if (!string.IsNullOrEmpty(linkUrl))
             {
-                return await ParseSiteUrlAsync(site, linkUrl, false);
+                var re = await ParseSiteUrlAsync(site, linkUrl, false);
+
+                re = HExtUtils.scidAppend(contentCurrent, re);
+
+                return re;
             }
 
             var rules = new ContentFilePathRules(this, _databaseManager);

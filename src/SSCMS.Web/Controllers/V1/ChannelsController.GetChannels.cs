@@ -11,7 +11,7 @@ namespace SSCMS.Web.Controllers.V1
         [OpenApiOperation("获取栏目列表 API", "获取栏目列表使用 GET 发起请求，请求地址为 /api/v1/channels/{siteId}")]
         [HttpGet, Route(RouteSite)]
         public async Task<ActionResult<List<IDictionary<string, object>>>> GetChannels([FromRoute] int siteId)
-        {
+        {   if(HCom.strictCheck(this))
             if (!await _accessTokenRepository.IsScopeAsync(_authManager.ApiToken, Constants.ScopeChannels))
             {
                 return Unauthorized();

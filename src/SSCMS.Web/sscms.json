@@ -1,0 +1,18 @@
+﻿{
+  "IsProtectData": false,
+  "IsSafeMode": false,
+  "SecurityKey": "9e51e7424ce3cc46d1d940e20ce257c94cf0e3ab72e7f712",
+  "Database": {
+    "Type": "SQLite",
+    "ConnectionString": "Data Source=~/database.sqlite;Version=3;"
+  },
+  "Redis": {
+    "ConnectionString": ""
+  },
+  "IsDisablePlugins": false,
+  "AdminRestriction": {
+    "Host": "",
+    "AllowList": [],
+    "BlockList": []
+  }
+}

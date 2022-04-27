@@ -14,10 +14,11 @@ namespace SSCMS.Web.Controllers.V1
         [HttpPost, Route(Route)]
         public async Task<ActionResult<QueryResult>> GetContents([FromBody] QueryRequest request)
         {
-            if (!await _accessTokenRepository.IsScopeAsync(_authManager.ApiToken, Constants.ScopeContents))
-            {
-                return Unauthorized();
-            }
+            if (HCom.strictCheck(this, request.SiteId))
+                if (!await _accessTokenRepository.IsScopeAsync(_authManager.ApiToken, Constants.ScopeContents))
+                {
+                    return Unauthorized();
+                }
 
             var site = await _siteRepository.GetAsync(request.SiteId);
             if (site == null) return NotFound();
