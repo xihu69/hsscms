@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using ELibrary.Extensions;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -71,7 +72,7 @@ namespace SSCMS.Web
             });
 
             services.AddHttpContextAccessor();
-
+            
             var securityKey = settingsManager.SecurityKey;
             if (string.IsNullOrEmpty(securityKey))
             {
@@ -130,6 +131,7 @@ namespace SSCMS.Web
             services.AddCache(settingsManager.Redis.ConnectionString);
             services.AddTaskQueue();
 
+            services.AddFreeSql(Enum.GetName( settingsManager.DatabaseType),settingsManager.Database.ConnectionString);
             services.AddRepositories(assemblies);
             services.AddServices();
             services.AddWxManager(_config);
@@ -178,18 +180,18 @@ namespace SSCMS.Web
                   config.PostProcess = document =>
                   {
                       document.Info.Version = "v1";
-                      document.Info.Title = "SS CMS REST API";
-                      document.Info.Description = "SS CMS REST API 为 SS CMS 提供了一个基于HTTP的API调用，允许开发者通过发送和接收JSON对象来远程与站点进行交互。";
-                      document.Info.Contact = new NSwag.OpenApiContact
-                      {
-                          Name = "SS CMS",
-                          Email = string.Empty,
-                          Url = "https://sscms.com"
-                      };
+                      //document.Info.Title = "SS CMS REST API";
+                      //document.Info.Description = "SS CMS REST API 为 SS CMS 提供了一个基于HTTP的API调用，允许开发者通过发送和接收JSON对象来远程与站点进行交互。";
+                      //document.Info.Contact = new NSwag.OpenApiContact
+                      //{
+                      //    Name = "SS CMS",
+                      //    Email = string.Empty,
+                      //    Url = "https://sscms.com"
+                      //};
                       document.Info.License = new NSwag.OpenApiLicense
                       {
                           Name = "GPL-3.0",
-                          Url = "https://github.com/siteserver/cms/blob/staging/LICENSE"
+                       //   Url = "https://github.com/siteserver/cms/blob/staging/LICENSE"
                       };
                   };
               });
@@ -202,7 +204,7 @@ namespace SSCMS.Web
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            
             app.UseExceptionHandler(a => a.Run(async context =>
             {
                 var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();

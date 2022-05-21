@@ -44,15 +44,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\ELibrary\ELibrary.csproj" />
     <ProjectReference Include="..\SSCMS.Core\SSCMS.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Watch Include="plugins\**\*.cshtml;plugins\**\*.cs" Exclude="plugins\*\obj\**\*;plugins\bin\**\*" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\Admin\HManage\" />
   </ItemGroup>
 
   <!--<Target Name="PostBuild" AfterTargets="PostBuildEvent">
