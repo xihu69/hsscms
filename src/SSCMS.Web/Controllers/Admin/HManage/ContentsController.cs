@@ -1,9 +1,18 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using ELibrary.Models;
+using ELibrary.Utils;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SSCMS.Dto;
+using SSCMS.Models;
+using SSCMS.Repositories;
 using System;
 using System.Collections.Generic;
-
+using System.Text.Json;
+using System.Linq;
+using SSCMS.Utils;
+using System.Threading.Tasks;
+using SSCMS.Services;
+using ELibrary.Service;
 namespace SSCMS.Web.Controllers.Admin.HManage
 {
     //[Route("api/[controller]")]
@@ -11,36 +20,45 @@ namespace SSCMS.Web.Controllers.Admin.HManage
     public class ContentsController : HBaseController
     {
         private readonly IFreeSql freeSql;
+        private readonly ISiteRepository _siteRepository;
+        private readonly IChannelRepository _channelRepository;
+        private readonly IContentRepository _contentRepository;
+        private readonly ICreateManager _createManager;
+        private readonly DataInOut dataInOut;
 
-        public ContentsController(IFreeSql freeSql) {
+        public ContentsController(IFreeSql freeSql, ISiteRepository siteRepository, IChannelRepository channelRepository, IContentRepository contentRepository, ICreateManager createManager,DataInOut dataInOut)
+        {
             this.freeSql = freeSql;
+            _siteRepository = siteRepository;
+            _channelRepository = channelRepository;
+            _contentRepository = contentRepository;
+            _createManager = createManager;
+            this.dataInOut = dataInOut;
         }
         /// <summary>导出图书
         /// 
         /// </summary>
         /// <param name="dto">{siteId:123,time:'',ChannelIds:[],bookIds:[]}</param>
         [HttpPost]
-        public void ExportBooks(ExportIdsIn dto)
+        public async void ExportBooks(DataInOut.ExportIdsIn dto)
         {
-            //创建导出记录,写入数据库，执行过程修改状态
-            //后台执行V
-            //查询分类
-            //分类内容查询--分页循环写入
-            //查询单列内容及分类--分页循环
-            //检查内容是否在已有分类中
-            //在--忽略
-            //不在--添加到分类中，标记单列
-            //写入内容 -- 标记单列
-            //导出csv结构：【书籍信息，分类名称，分类id，来源站点唯一标识，类型(目录、内容、单列内容、单列目录)】
-            //建立后台任务
+            dataInOut.ExportBooksAsync(dto);
+            return;
+            var tk = new TaskRecord();
+            tk.SiteId = dto.SiteId;
+            tk.InputData = JsonSerializer.Serialize(dto);
+            tk.Type = 1;
+            tk.Title = "导出任务";
+            var re = freeSql.Insert(tk).ExecuteAffrows();
         }
+      
         /// <summary> 导入
         /// 
         /// </summary>
-        public void ImportBooks(string filePath) {
-          var re=  freeSql.Ado.Query<dynamic>("select * from siteserver_Log");
-            Console.WriteLine(re);
+        public async void ImportBooks(int siteId,string filePath) {
+          dataInOut.ImportBooks(siteId, filePath);
         }
+       
         /// <summary> 设置订阅列表
         /// 
         /// </summary>
@@ -59,16 +77,6 @@ namespace SSCMS.Web.Controllers.Admin.HManage
         
         }
 
-        /// <summary>
-        ///  {siteId:123,time:'',ChannelIds:[],bookIds:[]}
-        /// </summary>
-        public class ExportIdsIn:IDto
-        {
-            public long SiteId { get; set; }
-            public DateTime Time { get; set; }
-            public long ChannelIds { get; set; }
-            public long[] bookIds { get; set; }
-        }
         public class ExportBooksReq:IDto
         {
             public int SiteId { get; set; }

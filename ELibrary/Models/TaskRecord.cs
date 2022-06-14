@@ -15,6 +15,7 @@ namespace ELibrary.Models
         /// 
         /// </summary>
         public int Type { get; set; }
+        public long SiteId { get; set; }
         /// <summary>导出原始id清单，导入文件名称
         /// 
         /// </summary>
