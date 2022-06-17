@@ -22,6 +22,7 @@ var data = utils.init({
   agreement: false,
   passwordLevel: null,
   errorMessage: null,
+  failureCount: 0,
 
   databaseForm: {
     databaseType: 'MySql',
@@ -131,8 +132,8 @@ var methods = {
         $this.apiInstall(res.value);
       }, 3000);
     }).catch(function (error) {
-      utils.loading($this, false);
       $this.errorMessage = utils.getErrorMessage(error);
+      utils.loading($this, false);
     });
   },
 
@@ -144,17 +145,17 @@ var methods = {
     $api.post($url + '/actions/install', _.assign({securityKey: securityKey}, $this.databaseForm, $this.redisForm, $this.adminForm)).then(function (response) {
       var res = response.data;
       $this.pageIndex++;
-    }).catch(function (error) {
-      $api.post($url + '/actions/install', _.assign({securityKey: securityKey}, $this.databaseForm, $this.redisForm, $this.adminForm)).then(function (response) {
-        var res = response.data;
-        $this.pageIndex++;
-      }).catch(function (error) {
-        $this.errorMessage = utils.getErrorMessage(error);
-      }).then(function () {
-        utils.loading($this, false);
-      });
-    }).then(function () {
       utils.loading($this, false);
+    }).catch(function (error) {
+      $this.failureCount++;
+      if ($this.failureCount > 5) {
+        $this.errorMessage = utils.getErrorMessage(error);
+        utils.loading($this, false);
+      } else {
+        setTimeout(function () {
+          $this.apiPrepare();
+        }, 3000 * $this.failureCount);
+      }
     });
   },
 

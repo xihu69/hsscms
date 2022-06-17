@@ -4,6 +4,7 @@ using NSwag.Annotations;
 using SSCMS.Configuration;
 using SSCMS.Models;
 using SSCMS.Core.Utils;
+using SSCMS.Utils;
 
 namespace SSCMS.Web.Controllers.V1
 {
@@ -20,19 +21,20 @@ namespace SSCMS.Web.Controllers.V1
                 }
 
             var site = await _siteRepository.GetAsync(siteId);
-            if (site == null) return NotFound();
+            if (site == null) return this.Error(Constants.ErrorNotFound);
 
             var channelInfo = await _channelRepository.GetAsync(channelId);
-            if (channelInfo == null) return NotFound();
+
+            if (channelInfo == null) return this.Error(Constants.ErrorNotFound);
             if (HCom.strictCheck(this))
                 if (!await _authManager.HasContentPermissionsAsync(siteId, channelId, MenuUtils.ContentPermissions.View)) return Unauthorized();
 
             var content = await _contentRepository.GetAsync(site, channelInfo, id);
-            if (content == null) return NotFound();
+            if (content == null) return this.Error(Constants.ErrorNotFound);
 
             return content;
         }
-        
 
     }
+
 }

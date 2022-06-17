@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using SSCMS.Configuration;
 using SSCMS.Core.Utils;
 using SSCMS.Utils;
 
@@ -21,7 +21,7 @@ namespace SSCMS.Web.Controllers.Admin.Cms.Channels
             }
 
             var site = await _siteRepository.GetAsync(request.SiteId);
-            if (site == null) return NotFound();
+            if (site == null) return this.Error(Constants.ErrorNotFound);
 
             var parent = await _channelRepository.GetAsync(request.ParentId);
             if (parent == null) return this.Error("无法确定父栏目");
@@ -89,13 +89,14 @@ namespace SSCMS.Web.Controllers.Admin.Cms.Channels
                     var parentId = (int)insertedChannelIdHashtable[count];
 
                     var insertedChannelId = await _channelRepository.InsertAsync(request.SiteId, parentId, channelName, indexName, parent.ContentModelPluginId, channelTemplateId, contentTemplateId);
-                    Thread.Sleep(100);
                     insertedChannelIdHashtable[count + 1] = insertedChannelId;
                     expandedChannelIds.Add(insertedChannelId);
 
                     await _createManager.CreateChannelAsync(request.SiteId, insertedChannelId);
                 }
             }
+
+            await _channelRepository.RemoveListCacheAsync(request.SiteId);
 
             return expandedChannelIds;
         }

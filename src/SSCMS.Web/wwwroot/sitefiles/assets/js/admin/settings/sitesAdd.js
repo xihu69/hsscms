@@ -1,4 +1,5 @@
 ﻿var $url = '/settings/sitesAdd';
+var $urlUpload = $apiUrl + '/settings/sitesAdd/actions/upload';
 
 var data = utils.init({
   pageType: utils.getQueryString('type') || 'selectType',
@@ -39,7 +40,13 @@ var data = utils.init({
   total: 1,
   current: 0,
   message: '',
-  success: false
+  success: false,
+
+  uploadPanel: false,
+  uploadLoading: false,
+  uploadList: [],
+
+  errorMessage: '',
 });
 
 var methods = {
@@ -55,7 +62,9 @@ var methods = {
       $this.tableNameList = res.tableNameList;
       $this.form.guid = res.guid;
     }).catch(function (error) {
-      utils.error(error);
+      $this.errorMessage = utils.getErrorMessage(error);
+      $this.pageType = 'error';
+      //utils.error(error);
     }).then(function () {
       utils.loading($this, false);
       if ($this.pageType == 'selectCloud') {
@@ -267,6 +276,37 @@ var methods = {
 
   btnCloseClick: function() {
     utils.removeTab();
+  },
+
+  btnUploadClick: function () {
+    this.uploadPanel = true;
+  },
+
+  uploadBefore(file) {
+    var isZip = file.name.indexOf('.zip', file.name.length - '.zip'.length) !== -1;
+    if (!isZip) {
+      utils.error('上传站点模板只能是 Zip 格式!');
+    }
+    return isZip;
+  },
+
+  uploadProgress: function() {
+    utils.loading(this, true);
+  },
+
+  uploadSuccess: function(res, file) {
+    utils.loading(this, false);
+    this.form.createType = 'local';
+    this.form.localDirectoryName = res.directoryName;
+    this.pageType = 'submit';
+    this.uploadPanel = false;
+    utils.success('站点模板上传成功！');
+  },
+
+  uploadError: function(err) {
+    utils.loading(this, false);
+    var error = JSON.parse(err.message);
+    utils.error(error.message);
   },
 };
 

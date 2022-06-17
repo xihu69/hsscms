@@ -19,6 +19,10 @@ namespace SSCMS.Core.Utils
             {
                 adminRestrictionBlockList = new string[] { };
             }
+            if (string.IsNullOrEmpty(securityKey))
+            {
+                securityKey = StringUtils.GetSecurityKey();
+            }
 
             var json = SettingsManager.RunningInContainer
                 ? $@"
@@ -102,16 +106,14 @@ namespace SSCMS.Core.Utils
                     var json = FileUtils.ReadText(filePath);
                     if (json.Contains(@"""SecurityKey"": """","))
                     {
-                        var securityKey = StringUtils.GetShortGuid(false) + StringUtils.GetShortGuid(false) +
-                                          StringUtils.GetShortGuid(false);
+                        var securityKey = StringUtils.GetSecurityKey();
                         FileUtils.WriteText(filePath,
                             json.Replace(@"""SecurityKey"": """",", $@"""SecurityKey"": ""{securityKey}"","));
                     }
                 }
                 else
                 {
-                    var securityKey = StringUtils.GetShortGuid(false) + StringUtils.GetShortGuid(false) +
-                                      StringUtils.GetShortGuid(false);
+                    var securityKey = StringUtils.GetSecurityKey();
 
                     SaveSettings(contentRootPath, false, false, false, securityKey, DatabaseType.MySql.GetValue(),
                         string.Empty, string.Empty, string.Empty, null, null);

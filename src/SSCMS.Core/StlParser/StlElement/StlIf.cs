@@ -13,6 +13,7 @@ using SSCMS.Models;
 using SSCMS.Services;
 using SSCMS.Utils;
 using Dynamic = SSCMS.Parse.Dynamic;
+using SSCMS.Enums;
 
 namespace SSCMS.Core.StlParser.StlElement
 {
@@ -157,7 +158,7 @@ namespace SSCMS.Core.StlParser.StlElement
             var pageInfo = parseManager.PageInfo;
             var contextInfo = parseManager.ContextInfo;
 
-            var innerHtml = contextInfo.InnerHtml; 
+            var innerHtml = contextInfo.InnerHtml;
 
             StlParserUtility.GetLoadingYesNo(innerHtml, out var loading, out var yes, out var no);
             if (string.IsNullOrEmpty(yes) && !string.IsNullOrEmpty(attributeYes))
@@ -438,7 +439,7 @@ namespace SSCMS.Core.StlParser.StlElement
                     }
                 }
             }
-            
+
             return isSuccess;
         }
 
@@ -835,16 +836,17 @@ namespace SSCMS.Core.StlParser.StlElement
             {
                 theValue = channel.Content;
             }
-            else if (StringUtils.EqualsIgnoreCase(StlParserUtility.Channels, testTypeStr) || StringUtils.EqualsIgnoreCase(StlParserUtility.CountOfChannelsxxx, testTypeStr))
+            else if (StringUtils.EqualsIgnoreCase(StlParserUtility.Channels, testTypeStr) || StringUtils.EqualsIgnoreCase(StlParserUtility.CountOfChannels, testTypeStr))
             {
-                theValue = channel.ChildrenCount.ToString();
+                var channelIds = await databaseManager.ChannelRepository.GetChannelIdsAsync(channel.SiteId, channel.Id, ScopeType.Children);
+                theValue = channelIds.Count.ToString();
             }
-            else if (StringUtils.EqualsIgnoreCase(StlParserUtility.Contents, testTypeStr) || StringUtils.EqualsIgnoreCase(StlParserUtility.CountOfContentsxxx, testTypeStr))
+            else if (StringUtils.EqualsIgnoreCase(StlParserUtility.Contents, testTypeStr) || StringUtils.EqualsIgnoreCase(StlParserUtility.CountOfContents, testTypeStr))
             {
                 var count = await databaseManager.ContentRepository.GetCountAsync(pageInfo.Site, channel);
                 theValue = count.ToString();
             }
-            else if (StringUtils.EqualsIgnoreCase(StlParserUtility.ImageContents, testTypeStr) || StringUtils.EqualsIgnoreCase(StlParserUtility.CountOfImageContentsxxx, testTypeStr))
+            else if (StringUtils.EqualsIgnoreCase(StlParserUtility.ImageContents, testTypeStr) || StringUtils.EqualsIgnoreCase(StlParserUtility.CountOfImageContents, testTypeStr))
             {
                 var count = await databaseManager.ContentRepository.GetCountCheckedImageAsync(pageInfo.Site, channel);
                 theValue = count.ToString();
@@ -852,6 +854,11 @@ namespace SSCMS.Core.StlParser.StlElement
             else if (StringUtils.EqualsIgnoreCase(nameof(Channel.LinkUrl), testTypeStr))
             {
                 theValue = channel.LinkUrl;
+            }
+            else if (StringUtils.EqualsIgnoreCase(testTypeStr, "Images"))
+            {
+                var countName = ColumnsManager.GetCountName(nameof(Channel.ImageUrl));
+                theValue = channel.Get<int>(countName).ToString();
             }
             else
             {
@@ -864,30 +871,65 @@ namespace SSCMS.Core.StlParser.StlElement
         {
             var theValue = string.Empty;
 
-            var contentInfo = await parseManager.GetContentAsync();
+            var content = await parseManager.GetContentAsync();
 
-            if (contentInfo != null)
+            if (content == null) return theValue;
+
+            if (StringUtils.EqualsIgnoreCase(testTypeStr, "IsTop"))
             {
-                if (StringUtils.EqualsIgnoreCase(testTypeStr, "IsTop"))
+                theValue = content.Get<string>(nameof(Content.Top));
+            }
+            else if (StringUtils.EqualsIgnoreCase(testTypeStr, "IsRecommend"))
+            {
+                theValue = content.Get<string>(nameof(Content.Recommend));
+            }
+            else if (StringUtils.EqualsIgnoreCase(testTypeStr, "IsColor"))
+            {
+                theValue = content.Get<string>(nameof(Content.Color));
+            }
+            else if (StringUtils.EqualsIgnoreCase(testTypeStr, "IsHot"))
+            {
+                theValue = content.Get<string>(nameof(Content.Hot));
+            }
+            else if (StringUtils.EqualsIgnoreCase(testTypeStr, "Images"))
+            {
+                if (!string.IsNullOrEmpty(content.ImageUrl))
                 {
-                    theValue = contentInfo.Get<string>(nameof(Content.Top));
-                }
-                else if (StringUtils.EqualsIgnoreCase(testTypeStr, "IsRecommend"))
-                {
-                    theValue = contentInfo.Get<string>(nameof(Content.Recommend));
-                }
-                else if (StringUtils.EqualsIgnoreCase(testTypeStr, "IsColor"))
-                {
-                    theValue = contentInfo.Get<string>(nameof(Content.Color));
-                }
-                else if (StringUtils.EqualsIgnoreCase(testTypeStr, "IsHot"))
-                {
-                    theValue = contentInfo.Get<string>(nameof(Content.Hot));
+                  var countName = ColumnsManager.GetCountName(nameof(Content.ImageUrl));
+                  theValue = (content.Get<int>(countName) + 1).ToString();
                 }
                 else
                 {
-                    theValue = contentInfo.Get<string>(testTypeStr);
+                  theValue = "0";
                 }
+            }
+            else if (StringUtils.EqualsIgnoreCase(testTypeStr, "Videos"))
+            {
+                if (!string.IsNullOrEmpty(content.VideoUrl))
+                {
+                  var countName = ColumnsManager.GetCountName(nameof(Content.VideoUrl));
+                  theValue = (content.Get<int>(countName) + 1).ToString();
+                }
+                else
+                {
+                  theValue = "0";
+                }
+            }
+            else if (StringUtils.EqualsIgnoreCase(testTypeStr, "Files"))
+            {
+                if (!string.IsNullOrEmpty(content.FileUrl))
+                {
+                  var countName = ColumnsManager.GetCountName(nameof(Content.FileUrl));
+                  theValue = (content.Get<int>(countName) + 1).ToString();
+                }
+                else
+                {
+                  theValue = "0";
+                }
+            }
+            else
+            {
+                theValue = content.Get<string>(testTypeStr);
             }
 
             return theValue;
@@ -978,7 +1020,7 @@ namespace SSCMS.Core.StlParser.StlElement
         private static bool IsNumber(int number, string testOperate, string testValue)
         {
             var isSuccess = false;
-            
+
             if (StringUtils.EqualsIgnoreCase(testOperate, OperateEquals))
             {
                 if (number == TranslateUtils.ToInt(testValue))

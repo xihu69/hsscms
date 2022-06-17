@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Datory;
 using Microsoft.AspNetCore.Mvc;
+using SSCMS.Configuration;
 using SSCMS.Core.Utils;
 using SSCMS.Enums;
 using SSCMS.Utils;
@@ -19,9 +20,22 @@ namespace SSCMS.Web.Controllers.Admin.Cms.Channels
             }
 
             var site = await _siteRepository.GetAsync(siteId);
-            if (site == null) return NotFound();
+            if (site == null) return this.Error(Constants.ErrorNotFound);
 
             var channel = await _channelRepository.GetAsync(channelId);
+            var templates = await _templateRepository.GetSummariesAsync(siteId);
+            if (!templates.Exists(x => x.Id == channel.ChannelTemplateId))
+            {
+                var templateId = await _templateRepository.GetDefaultTemplateIdAsync(siteId, TemplateType.ChannelTemplate);
+                channel.ChannelTemplateId = templateId;
+                await _channelRepository.UpdateAsync(channel);
+            }
+            if (!templates.Exists(x => x.Id == channel.ContentTemplateId))
+            {
+                var templateId = await _templateRepository.GetDefaultTemplateIdAsync(siteId, TemplateType.ContentTemplate);
+                channel.ContentTemplateId = templateId;
+                await _channelRepository.UpdateAsync(channel);
+            }
 
             var styles = await GetStylesAsync(channel);
             var entity = new Entity(channel.ToDictionary());
