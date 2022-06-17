@@ -62,13 +62,16 @@ namespace SSCMS.Web.Controllers.Admin.HManage
         /// <summary> 设置订阅列表
         /// 
         /// </summary>
-        public void SetSubscribeList(string[] books) { 
+        public void SetSubscribeList(BookSubscribe info) {
+            freeSql.Insert(info).ExecuteAffrows();
         }
         /// <summary> 获取更新列表
         /// 
         /// </summary>
-        public void GetSubscribeUpdate(string siteSign) { 
-        
+        public void GetSubscribeUpdate(string siteSign,DateTime lastTicks) { 
+            //获取站点订阅列表
+            //获取最后时间后的更新
+             //返回更新内容列表，添加订阅执行记录
         }
         /// <summary>获取图书
         /// 
