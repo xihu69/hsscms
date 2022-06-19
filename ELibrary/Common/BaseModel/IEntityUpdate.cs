@@ -19,21 +19,21 @@ namespace ELibrary.Common.BaseModel
         /// 修改者Id
         /// </summary>
         [Description("修改者Id")]
-        [Column(Position = -3, CanInsert = false)]
+        [Column(Position = -3)]
         public long? ModifiedUserId { get; set; }
 
         /// <summary>
         /// 修改者
         /// </summary>
         [Description("修改者")]
-        [Column(Position = -2, CanInsert = false), MaxLength(50)]
+        [Column(Position = -2), MaxLength(50)]
         public string ModifiedUserName { get; set; }
 
         /// <summary>
         /// 修改时间
         /// </summary>
         [Description("修改时间")]
-        [Column(Position = -1, CanInsert = false, ServerTime = DateTimeKind.Local)]
+        [Column(Position = -1,  ServerTime = DateTimeKind.Local)]
         public DateTime? ModifiedTime { get; set; }
     }
 
