@@ -74,6 +74,11 @@
         "type": ["app"],
         "order": 112
       },
+	  "site_settings_users": {
+        "text": "站点用户",
+        "type": ["web"],
+        "order": 113
+      },
       "app_settings_users": {
         "text": "用户管理",
         "type": ["app"],
@@ -486,6 +491,22 @@
       }
     },
     "menus": {
+      "site_settings_users": {
+        "text": "站点用户",
+        "type": [ "web" ],
+        "permissions": [ "site_settings_users" ],
+        "order": 113,
+        "iconClass": "ion-android-contact",
+        "menus": {
+          "site_settings_users1": {
+            "text": "站点用户管理",
+            "type": [ "web" ],
+            "link": "./settings/siteUsers/",
+            "order": 113,
+            "iconClass": "ion-android-contact"
+          }
+        }
+      },
       "app_plugins_all": {
         "text": "插件管理",
         "type": ["app"],

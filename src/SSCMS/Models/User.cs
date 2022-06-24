@@ -59,5 +59,7 @@ namespace SSCMS.Models
 
         [DataColumn]
         public string AvatarUrl { get; set; }
+        [DataColumn]
+        public int SiteId { get; set; }
     }
 }

@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using ELibrary.Extensions;
+using ELibrary.Mvc;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -141,7 +142,7 @@ namespace SSCMS.Web
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");
             services
-                .AddControllers()
+                .AddControllers(op=>op.Filters.Add<ELActionFilter>())
                 .AddViewLocalization(
                     LanguageViewLocationExpanderFormat.Suffix,
                     opts => { opts.ResourcesPath = "Resources"; })
@@ -169,7 +170,7 @@ namespace SSCMS.Web
                 options.SupportedCultures = supportedCultures;
                 options.SupportedUICultures = supportedCultures;
             });
-
+            
             if (!settingsManager.IsSafeMode)
             {
               //http://localhost:5000/api/swagger/v1/swagger.json
@@ -204,7 +205,7 @@ namespace SSCMS.Web
             {
                 app.UseDeveloperExceptionPage();
             }
-            
+           
             app.UseExceptionHandler(a => a.Run(async context =>
             {
                 var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
