@@ -1,8 +1,10 @@
 ﻿@page
+@using SSCMS.Services
+@inject IAuthManager authManager
+
 @{ 
     ///EL: 复制users.cshtml 修改
     Layout = "_Layout"; }
-
 <el-form :inline="true" :model="formInline" size="mini"   >
   <el-form-item label="状态">
     <el-select v-model="formInline.state" placeholder="用户组" >

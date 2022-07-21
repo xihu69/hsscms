@@ -21,7 +21,10 @@ namespace SSCMS.Web.Controllers.Admin.Settings.Users
         private readonly IFreeSql freeSql;
 
 
-
+        public static async Task<bool> chaeckSiteSettingsUsers(IAuthManager authManager, int siteId)
+        {
+            return siteId < 0 ? false : await authManager.HasSitePermissionsAsync(siteId, SiteSettingsUsers);
+        }
         //[controller]/[action]
         [HttpGet, Route(Route+"/[action]")]
         public async Task<ActionResult<GetResults>> SiteUser([FromQuery] SiteGetRequest request)

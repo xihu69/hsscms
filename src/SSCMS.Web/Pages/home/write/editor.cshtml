@@ -37,7 +37,7 @@
   
       </el-scrollbar>
     </el-main>
-    <el-aside v-if="isSettings" width="280px">
+    <el-aside @SSCMS.Services.AuthManagerExt.IfSaShow(null)  v-if="isSettings" width="280px">
       <el-scrollbar class="scrollbar" :style="{height: mainHeight}">
         
         <el-collapse v-model="collapseSettings" style="margin-left: 5px;">
@@ -105,7 +105,7 @@
     <el-button size="medium" v-on:click="btnSaveClick" type="primary">保 存</el-button>
     <el-button size="medium" v-on:click="btnPreviewClick" type="info">预 览</el-button>
     <el-button size="medium" v-on:click="btnCloseClick" type="default">关 闭</el-button>
-    <el-button size="medium" icon="el-icon-setting" circle :type="isSettings ? 'info' : 'default'" v-on:click="isSettings = !isSettings"></el-button>
+    <el-button @SSCMS.Services.AuthManagerExt.IfSaShow(null) size="medium" icon="el-icon-setting" circle :type="isSettings ? 'info' : 'default'" v-on:click="isSettings = !isSettings"></el-button>
   </el-row>
 
 </template>

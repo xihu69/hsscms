@@ -7,6 +7,7 @@ using SSCMS.Configuration;
 using SSCMS.Dto;
 using SSCMS.Utils;
 using SSCMS.Core.Utils;
+using SSCMS.Web.Controllers.Admin.HManage.Utils;
 
 namespace SSCMS.Web.Controllers.Admin.Cms.Contents
 {
@@ -33,6 +34,7 @@ namespace SSCMS.Web.Controllers.Admin.Cms.Contents
             var fileName = Path.GetFileName(file.FileName);
 
             var extendName = fileName.Substring(fileName.LastIndexOf(".", StringComparison.Ordinal));
+            if(!ContentUtils.IsFileImpType(extendName))
             if (!StringUtils.EqualsIgnoreCase(extendName, ".zip") && !StringUtils.EqualsIgnoreCase(extendName, ".xlsx") && !StringUtils.EqualsIgnoreCase(extendName, ".txt"))
             {
                 return this.Error(Constants.ErrorUpload);

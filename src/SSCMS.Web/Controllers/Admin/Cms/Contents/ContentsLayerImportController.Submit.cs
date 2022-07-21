@@ -72,6 +72,15 @@ namespace SSCMS.Web.Controllers.Admin.Cms.Contents
                     contentIdList.AddRange(await importObject.ImportContentsByTxtFileAsync(channelInfo, localFilePath, request.IsOverride, isChecked, request.CheckedLevel, adminId, 0, SourceManager.Default));
                 }
             }
+            else
+            {
+                if (request.ImportType == "csv")
+                {
+                    var localFilePath = _pathManager.GetTemporaryFilesPath(request.FileNames[0]);
+                    if (FileUtils.IsType(FileType.Csv, PathUtils.GetExtension(localFilePath)))
+                      await  dataInOut.ImportBooks(site.Id, localFilePath, channelInfo);
+                }
+            }
 
             foreach (var contentId in contentIdList)
             {

@@ -5,6 +5,9 @@ using SSCMS.Models;
 
 namespace SSCMS.Web.Controllers.Admin.HManage
 {
+    /// <summary>
+    /// 阅读记录，下载记录
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class ReaderRecordController : HBaseController<ReaderRecord>

@@ -16,7 +16,10 @@ namespace SSCMS.Web.Controllers.Admin.Settings.Users
             {
                 return Unauthorized();
             }
-
+            else if(!await UsersController.chaeckSiteSettingsUsers(_authManager,request.SiteId))
+            {
+                return Unauthorized();
+            }
             if (request.Id == 0)
             {
                 if (!string.IsNullOrEmpty(request.Mobile))

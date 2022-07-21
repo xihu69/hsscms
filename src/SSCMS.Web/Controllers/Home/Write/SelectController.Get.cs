@@ -14,10 +14,11 @@ namespace SSCMS.Web.Controllers.Home.Write
 
             if (siteIds.Count == 0)
             {
-                return new GetResult
-                {
-                    Unauthorized = true
-                };
+                if (!Services.AuthManagerExt.AppendUserSite(await _authManager.GetUserAsync(), siteIds))
+                    return new GetResult
+                    {
+                        Unauthorized = true
+                    };
             }
 
             var sites = new List<Select<int>>();
@@ -60,5 +61,7 @@ namespace SSCMS.Web.Controllers.Home.Write
                 Root = root
             };
         }
+
+  
     }
 }

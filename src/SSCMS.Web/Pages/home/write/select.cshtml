@@ -1,4 +1,5 @@
 @page
+@using SSCMS.Services
 @{ Layout = "_LayoutHome"; }
 
 <el-alert
@@ -16,7 +17,7 @@
 
   <el-form size="small" label-width="100px">
     <el-form-item label="站点" prop="siteId">
-      <el-select
+      <el-select @AuthManagerExt.IfSaShow(null)
         ref="siteId"
         v-model="siteId"
         filterable
@@ -47,7 +48,7 @@
       <el-button type="primary" icon="el-icon-circle-plus-outline" :disabled="channelId == 0" v-on:click="btnAddClick">
         添加
       </el-button>
-      <el-button type="primary" icon="el-icon-tickets" :disabled="channelId == 0" v-on:click="btnImportClick">
+      <el-button @AuthManagerExt.IfSaShow(null) type="primary" icon="el-icon-tickets" :disabled="channelId == 0" v-on:click="btnImportClick">
         导入Word
       </el-button>
     </el-form-item>

@@ -23,6 +23,7 @@ namespace ELibrary.Utils
 
         private const char Separator = ',';
         private const char NewLine = '\n';
+        private const char NewLineBefore = '\r';
         private const char StringSign = '\"';
         private const int ReadEnd = -1;
         private int nowToken = 0;  //-1表示数据全部读取完毕
@@ -34,9 +35,11 @@ namespace ELibrary.Utils
         {
             get { return nowRowIndex; }
         }
-        public CsvReader(Stream stream)
+        public CsvReader(Stream stream,Encoding encoding= null)
         {
-            reader = new StreamReader(stream, Encoding.UTF8); // .GetEncoding("gb2312")
+            if(encoding==null)
+                encoding = Encoding.UTF8;
+            reader = new StreamReader(stream, encoding); // .GetEncoding("gb2312")
         }
         public CsvReader(TextReader tr)
         {
@@ -59,16 +62,19 @@ namespace ELibrary.Utils
             {
                 var list = new List<string>();
                 int i = 0;
+                string itemBef = null;
                 do
                 {
-                    var item = ReadItem();
+                   var  item = ReadItem();
                     if (item == null)
                         break;
                     list.Add(item);
+                    itemBef = item;
                     nowRowIndex++;
                 } while (nowToken != ReadEnd && nowToken != NewLine);
                 if(list.Count==0)
                     return null;
+                list[list.Count-1]=itemBef.TrimEnd(NewLineBefore);
                 return list.ToArray();
             }
         }

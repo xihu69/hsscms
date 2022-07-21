@@ -96,5 +96,10 @@ namespace SSCMS.Models
 
         [DataColumn] 
         public DateTime? AddDate { get; set; }
+        /// <summary> 原始内容出处
+        /// 
+        /// </summary>
+        [DataColumn]
+        public string OrgiVal { get;set; }
     }
 }

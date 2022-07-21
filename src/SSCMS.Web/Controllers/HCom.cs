@@ -5,9 +5,16 @@ namespace SSCMS.Web.Controllers
 {
     internal class HCom
     {
+        /// <summary>
+        /// 是否跳过权限验证，用于详情页直接访问，todo 需要实现简单验证，防止任意访问
+        /// </summary>
+        /// <param name="controller"></param>
+        /// <param name="siteId"></param>
+        /// <returns></returns>
         public static bool strictCheck(ControllerBase controller, int? siteId = null)
         {
             var token = AuthManager_ApiToken(controller);
+            return false;
             if (string.IsNullOrWhiteSpace(token))
                 return true;
             string sid = siteId == null ? null : siteId + "";

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ELibrary.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
@@ -24,8 +25,9 @@ namespace SSCMS.Web.Controllers.Admin.Cms.Contents
         private readonly IDatabaseManager _databaseManager;
         private readonly ISiteRepository _siteRepository;
         private readonly IChannelRepository _channelRepository;
+        private readonly DataInOut dataInOut;
 
-        public ContentsLayerImportController(ICacheManager cacheManager, IAuthManager authManager, IPathManager pathManager, ICreateManager createManager, IDatabaseManager databaseManager, ISiteRepository siteRepository, IChannelRepository channelRepository)
+        public ContentsLayerImportController(ICacheManager cacheManager, IAuthManager authManager, IPathManager pathManager, ICreateManager createManager, IDatabaseManager databaseManager, ISiteRepository siteRepository, IChannelRepository channelRepository,DataInOut dataInOut)
         {
             _cacheManager = cacheManager;
             _authManager = authManager;
@@ -34,6 +36,7 @@ namespace SSCMS.Web.Controllers.Admin.Cms.Contents
             _databaseManager = databaseManager;
             _siteRepository = siteRepository;
             _channelRepository = channelRepository;
+            this.dataInOut = dataInOut;
         }
 
         public class GetResult

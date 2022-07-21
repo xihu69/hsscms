@@ -113,7 +113,7 @@ var methods = {
       value: this.captchaValue
     }).then(function (response) {
       var res = response.data;
-
+      debugger
       if (res.isLoginExists) {
         $this.$confirm('该用户正在登录状态，可能是其他人正在使用或您上一次登录没有正常退出，是否强制注销并登录？', '强制登录提示', {
           confirmButtonText: '强制注销并登录',
@@ -133,7 +133,9 @@ var methods = {
         sessionStorage.removeItem(ACCESS_TOKEN_NAME);
         if ($this.isPersistent) {
           localStorage.setItem(ACCESS_TOKEN_NAME, res.token);
+          localStorage.setItem(ACCESS_TOKEN_NAME, res.token);
         } else {
+          sessionStorage.setItem(ACCESS_TOKEN_NAME, res.token);
           sessionStorage.setItem(ACCESS_TOKEN_NAME, res.token);
         }
         if (res.isEnforcePasswordChange) {

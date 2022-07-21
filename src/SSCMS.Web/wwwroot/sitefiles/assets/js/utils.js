@@ -904,3 +904,13 @@ $api.csrfPost = function (csrfToken, url, data) {
     }
   });
 }
+
+utils.getUserInfo = () => {
+  let base64Url = $token.split('.')[1]
+  let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
+  let info = JSON.parse(window.atob(base64))
+  utils.isSa = info.name === "sa"
+  return info
+}
+utils.getUserInfo()
+

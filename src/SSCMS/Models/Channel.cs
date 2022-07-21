@@ -92,5 +92,10 @@ namespace SSCMS.Models
 
         //显示下级栏目内容
         public bool IsAllContents { get; set; }
+        /// <summary> 系统分类的原始gid
+        /// 
+        /// </summary>
+        [DataColumn]
+        public string OrigVal { get;set; }
     }
 }

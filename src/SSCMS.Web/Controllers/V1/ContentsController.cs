@@ -61,6 +61,7 @@ namespace SSCMS.Web.Controllers.V1
 
         public class ClauseWhere
         {
+            public int? Or { get;set; }
             public string Column { get; set; }
             public string Operator { get; set; }
             public string Value { get; set; }
@@ -180,30 +181,61 @@ namespace SSCMS.Web.Controllers.V1
 
             if (request.Wheres != null)
             {
-                foreach (var where in request.Wheres)
+                query.Where(query =>
                 {
-                    if (string.IsNullOrEmpty(where.Operator)) where.Operator = OpEquals;
-                    if (StringUtils.EqualsIgnoreCase(where.Operator, OpIn))
+
+                    foreach (var where in request.Wheres)
                     {
-                        query.WhereIn(where.Column, ListUtils.GetStringList(where.Value));
+                        if (where.Or == 1)
+                        {
+                            if (string.IsNullOrEmpty(where.Operator)) where.Operator = OpEquals;
+                            if (StringUtils.EqualsIgnoreCase(where.Operator, OpIn))
+                            {
+                                query.OrWhereIn(where.Column, ListUtils.GetStringList(where.Value));
+                            }
+                            else if (StringUtils.EqualsIgnoreCase(where.Operator, OpNotIn))
+                            {
+                                query.OrWhereNotIn(where.Column, ListUtils.GetStringList(where.Value));
+                            }
+                            else if (StringUtils.EqualsIgnoreCase(where.Operator, OpLike))
+                            {
+                                query.OrWhereLike(where.Column, where.Value);
+                            }
+                            else if (StringUtils.EqualsIgnoreCase(where.Operator, OpNotLike))
+                            {
+                                query.OrWhereNotLike(where.Column, where.Value);
+                            }
+                            else
+                            {
+                                query.OrWhere(where.Column, where.Operator, where.Value);
+                            }
+                            continue;
+                        }
+
+                        if (string.IsNullOrEmpty(where.Operator)) where.Operator = OpEquals;
+                        if (StringUtils.EqualsIgnoreCase(where.Operator, OpIn))
+                        {
+                            query.WhereIn(where.Column, ListUtils.GetStringList(where.Value));
+                        }
+                        else if (StringUtils.EqualsIgnoreCase(where.Operator, OpNotIn))
+                        {
+                            query.WhereNotIn(where.Column, ListUtils.GetStringList(where.Value));
+                        }
+                        else if (StringUtils.EqualsIgnoreCase(where.Operator, OpLike))
+                        {
+                            query.WhereLike(where.Column, where.Value);
+                        }
+                        else if (StringUtils.EqualsIgnoreCase(where.Operator, OpNotLike))
+                        {
+                            query.WhereNotLike(where.Column, where.Value);
+                        }
+                        else
+                        {
+                            query.Where(where.Column, where.Operator, where.Value);
+                        }
                     }
-                    else if (StringUtils.EqualsIgnoreCase(where.Operator, OpNotIn))
-                    {
-                        query.WhereNotIn(where.Column, ListUtils.GetStringList(where.Value));
-                    }
-                    else if (StringUtils.EqualsIgnoreCase(where.Operator, OpLike))
-                    {
-                        query.WhereLike(where.Column, where.Value);
-                    }
-                    else if (StringUtils.EqualsIgnoreCase(where.Operator, OpNotLike))
-                    {
-                        query.WhereNotLike(where.Column, where.Value);
-                    }
-                    else
-                    {
-                        query.Where(where.Column, where.Operator, where.Value);
-                    }
-                }
+                    return query;
+                });
             }
 
             if (request.Orders != null)

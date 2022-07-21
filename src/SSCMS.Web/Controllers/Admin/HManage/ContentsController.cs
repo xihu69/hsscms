@@ -13,6 +13,8 @@ using SSCMS.Utils;
 using System.Threading.Tasks;
 using SSCMS.Services;
 using ELibrary.Service;
+using System.Text;
+
 namespace SSCMS.Web.Controllers.Admin.HManage
 {
     //[Route("api/[controller]")]
@@ -25,8 +27,10 @@ namespace SSCMS.Web.Controllers.Admin.HManage
         private readonly IContentRepository _contentRepository;
         private readonly ICreateManager _createManager;
         private readonly DataInOut dataInOut;
+        private readonly ContentSubscribe contentSubscribe;
+        private readonly SubscribeClient subscribeClient;
 
-        public ContentsController(IFreeSql freeSql, ISiteRepository siteRepository, IChannelRepository channelRepository, IContentRepository contentRepository, ICreateManager createManager,DataInOut dataInOut)
+        public ContentsController(IFreeSql freeSql, ISiteRepository siteRepository, IChannelRepository channelRepository, IContentRepository contentRepository, ICreateManager createManager,DataInOut dataInOut,ContentSubscribe  contentSubscribe,SubscribeClient subscribeClient)
         {
             this.freeSql = freeSql;
             _siteRepository = siteRepository;
@@ -34,6 +38,8 @@ namespace SSCMS.Web.Controllers.Admin.HManage
             _contentRepository = contentRepository;
             _createManager = createManager;
             this.dataInOut = dataInOut;
+            this.contentSubscribe = contentSubscribe;
+            this.subscribeClient = subscribeClient;
         }
         /// <summary>导出图书
         /// 
@@ -65,19 +71,28 @@ namespace SSCMS.Web.Controllers.Admin.HManage
         public void SetSubscribeList(BookSubscribe info) {
             freeSql.Insert(info).ExecuteAffrows();
         }
-        /// <summary> 获取更新列表
+        /// <summary> 获取内容更新列表
         /// 
         /// </summary>
-        public void GetSubscribeUpdate(string siteSign,DateTime lastTicks) { 
-            //获取站点订阅列表
-            //获取最后时间后的更新
-             //返回更新内容列表，添加订阅执行记录
+        public async Task<string> GetSubscribeUpdate(string siteSign, Dictionary<string, DateTime> lastTicksDic)
+        {
+            //获取站点订阅列表:分类-最后更新时间
+            //按照分类-获取最后时间后的更新：分类-最后更新时间
+            //返回更新内容列表，添加订阅执行记录
+            var re = await contentSubscribe.GetSubscribeUpdate(siteSign, lastTicksDic);
+            var stb = new StringBuilder();
+            foreach (var item in re)
+            {
+                stb.Append($"{item.Item1}|{item.Item2},");
+            }
+            return stb.ToString();
         }
         /// <summary>获取图书
         /// 
         /// </summary>
-        public void GetBooksInfo(string[] bookIds) { 
-        
+        public async Task<ContentSubscribe.ImpInfo[]> GetBooksInfo(string[] bookGids) { 
+
+              return  await  contentSubscribe.GetBooksInfoAsync(bookGids);
         }
 
         public class ExportBooksReq:IDto

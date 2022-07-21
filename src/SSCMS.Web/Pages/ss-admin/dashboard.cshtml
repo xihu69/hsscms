@@ -12,7 +12,7 @@
 
 <div style="margin: 10px;">
 
-  <div class="pb-3 pt-3">
+  <div class="pb-3 pt-3" v-if="false">
             
     <div class="text-center">
       <h3 v-html="adminWelcomeHtml"></h3>
@@ -49,14 +49,14 @@
 
   </div>
 
-  <div class="card-box" v-if="unCheckedListTotalCount > 0">
+  <div class="card-box" v-if="unCheckedListTotalCount >= 0">
     <div class="header-title m-t-0">待审核内容</div>
     <p class="text-muted m-b-25 font-13">
       共有
       <span style="color:#f00"> {{ unCheckedListTotalCount }} </span> 篇内容待审核
     </p>
 
-    <div class="table-responsive">
+    <div class="table-responsive" v-if="unCheckedListTotalCount > 0">
       <table class="table">
         <tbody>
           <tr v-for="unChecked in unCheckedList">

@@ -1,4 +1,5 @@
 ﻿using ELibrary.Common;
+using ELibrary.Models;
 using ELibrary.Utils;
 using SSCMS.Models;
 using SSCMS.Repositories;
@@ -43,7 +44,7 @@ namespace ELibrary.Service
             foreach (var chl in impChannels)
             {
                 var list = freeSql.Select<Content>().WithSql($"select * from {site.TableName}").Where(p => p.ChannelId == chl.Id).ToList();
-                var arr = list.Select(p => ContentToCsv(new DataInOut.ImpInfo() { ImpType = 3, ParentGuid = chl.Guid, ParentName = chl.ChannelName, Info = p })).ToArray();//new IComparable[] { p.Id, p.Guid, chl.ChannelName, p.ChannelId, site.Id, 3, p.Title, p.ImageUrl, p.FileUrl, p.Body }
+                var arr = list.Select(p => ContentToCsv(new DataInOut.ExpInfo() { ParentName = chl.ChannelName, Channel=chl,Info = p })).ToArray();//new IComparable[] { p.Id, p.Guid, chl.ChannelName, p.ChannelId, site.Id, 3, p.Title, p.ImageUrl, p.FileUrl, p.Body }
                 csvw.WriteAllLines(arr);
             }
             stream.Close();
@@ -61,29 +62,39 @@ namespace ELibrary.Service
             //建立后台任务
              */
         }
-        public async void ImportBooks(int siteId, string filePath)
+        public async Task<int> ImportBooks(int siteId, string filePath, Channel channelInfo=null)
         {
+
+            var site = await _siteRepository.GetAsync(siteId);
             var channels = await _channelRepository.GetChannelsAsync(siteId);
-            var stream = System.IO.File.OpenRead(filePath);
-            var csvr = new CsvReader(stream);
             var conList = new List<Content>();
             var upCount = 0;
-            for (var row = csvr.ReadRow(); row != null; row = csvr.ReadRow())
+            var nowChannels = new List<Channel>();
+            using (var stream = System.IO.File.OpenRead(filePath))
             {
-                var impInfo = ContentByArr(row);
-                if (impInfo.ImpType != 3)
-                    continue;
-                var chl = channels.Find(p => p.Guid == impInfo.ParentGuid);
-                if (chl == null)
-                    continue;
-                impInfo.Info.ChannelId = chl.Id;
-                impInfo.Info.SiteId = siteId;
-                conList.Add(impInfo.Info);
-                if (conList.Count > 100)
+                var encod = GuessEncoding.GetType(stream,Encoding.GetEncoding("gb2312"));
+                stream.Position = 0;
+                var csvr = new CsvReader(stream, encod);
+
+                var head = csvr.ReadRow();
+                var err = checkHead(head);
+                if (!string.IsNullOrEmpty(err)) return 0;
+                for (var row = csvr.ReadRow(); row != null; row = csvr.ReadRow())
                 {
-                    var re = await CreateContents(siteId, conList);
-                    upCount += re;
-                    conList.Clear();
+                    var impInfo = ContentByArr(row);
+                    var chl = channels.Find(p => p.IndexName == impInfo.ChannelIndex);
+                    if (chl == null)
+                        continue;
+                    nowChannels.Add(chl);
+                    impInfo.Info.ChannelId = chl.Id;
+                    impInfo.Info.SiteId = siteId;
+                    conList.Add(impInfo.Info);
+                    if (conList.Count > 100)
+                    {
+                        var re = await CreateContents(siteId, conList);
+                        upCount += re;
+                        conList.Clear();
+                    }
                 }
             }
             if (conList.Count > 0)
@@ -92,6 +103,15 @@ namespace ELibrary.Service
                 upCount += re;
                 conList.Clear();
             }
+            if (upCount > 0)
+            {
+                foreach (var item in nowChannels)
+                {
+                    _contentRepository.RemoveListCacheAsync(site, item);
+                }
+                _createManager.CreateByAllAsync(siteId);
+            }
+
 
             //建立栏目
 
@@ -99,7 +119,10 @@ namespace ELibrary.Service
 
             //更新栏目
             //  await _createManager.CreateContentAsync(request.SiteId, channelInfo.Id, contentId);
-            await _createManager.CreateByAllAsync(siteId);
+            //Datory.Q.CachingRemove(GetListKey(tableName, content.SiteId, content.ChannelId))
+
+
+            return upCount;
         }
 
         public async Task<int> CreateContents(int siteId, IList<Content> list)
@@ -130,7 +153,8 @@ namespace ELibrary.Service
 
                 var content = new Content();
                 content.LoadDict(request.ToDictionary());
-                content.Guid = request.Guid;
+                content.Guid = Guid.NewGuid().ToString(); // request.Guid;
+                //content.OrgiVal = request.Guid;
                 content.SiteId = siteId;
                 content.ChannelId = channelId;
                 content.AdminId = adminId;
@@ -139,7 +163,9 @@ namespace ELibrary.Service
                 content.SourceId = request.SourceId;
                 content.Checked = isChecked;
                 content.CheckedLevel = checkedLevel;
-
+                content.LastModifiedDate=DateTime.Now;
+                content.AddDate = DateTime.Now;
+                content.CreatedDate = DateTime.Now;
 
                 //content.Id = await _contentRepository.InsertAsync(site, channel, content);
 
@@ -154,7 +180,7 @@ namespace ELibrary.Service
 
                 listIn.Add(content);
             }
-            string s= freeSql.Insert(listIn).IgnoreColumns(p=>p.Id).AsTable(site.TableName).ToSql();
+            //string s= freeSql.Insert(listIn).IgnoreColumns(p=>p.Id).AsTable(site.TableName).ToSql();
             var re = freeSql.Insert(listIn).IgnoreColumns(p => p.Id).AsTable(site.TableName).ExecuteAffrows();
             return re;
         }
@@ -224,35 +250,52 @@ namespace ELibrary.Service
 
             return Result.To(channelInfo);
         }
-      public  IComparable[] ContentToCsv(ImpInfo p)
+      public  IComparable[] ContentToCsv(ExpInfo p)
         {
-            return new IComparable[] { p.ImpType, p.ParentGuid, p.ParentName, p.Info.Guid, p.Info.SiteId, p.Info.Title, p.Info.SubTitle, p.Info.ImageUrl, p.Info.FileUrl, p.Info.Body };
+            return new IComparable[] { p.Channel.IndexName,  p.Info.Title, p.Info.SubTitle,p.Info.Author, p.Info.ImageUrl, p.Info.FileUrl, p.Info.Summary,p.Info.Guid,p.Info.Body};
         }
        public ImpInfo ContentByArr(string[] p)
         {
             var info = new ImpInfo() { Info=new Content()};
 
             int i = 0;
-            info.ImpType = int.Parse(p[i++]);
-            info.ParentGuid = p[i++];
-            info.ParentName = p[i++];
-            info.Info.Guid = p[i++];
-            info.Info.SiteId = int.Parse(p[i++]);
+            info.ChannelIndex = p[i++];
             info.Info.Title = p[i++];  // 5
             info.Info.SubTitle = p[i++];
+            info.Info.Author= p[i++];
             info.Info.ImageUrl = p[i++];
             info.Info.FileUrl = p[i++];
+            info.Info.Summary = p[i++];
+            info.Info.Guid = p[i++];
             info.Info.Body = p[i++];
             return info;
         }
-       public IList<Channel> getChildrenList(IList<Channel> list, int parentId)
+        public string checkHead(string[] row) {
+            var heads = new[] { "分类索引","名称","副标题","作者","图片","文件","内容摘要","来源","内容" };
+            if (row.Length != heads.Length)
+                return "列数量错误";
+            for (int i = 0; i < row.Length; i++) {
+                if (row[i] != heads[i])
+                    return $"列{i},名称错误";
+            }
+            return null;
+        }
+       /// <summary>
+       /// 获取所有子节点，平面
+       /// </summary>
+       /// <param name="list"></param>
+       /// <param name="parentId"></param>
+       /// <returns></returns>
+        public IList<Channel> getChildrenList(IList<Channel> list, int parentId)
         {
             var children1 = list.Where(p => p.ParentId == parentId).ToList();
             var children2 = children1.SelectMany(p => getChildrenList(list, p.Id)).ToArray();
             children1.AddRange(children2);
             return children1;
         }
-      public  IList<Channel> getChildrens(IList<Channel> list, Func<Channel, bool> select = null, Action<Channel, Channel> addChildren = null)
+
+        
+      public  IList<Channel> getChildrensTree(IList<Channel> list, Func<Channel, bool> select = null, Action<Channel, Channel> addChildren = null)
         {
             var roots = new List<Channel>();
             for (int i = 0; i < list.Count; i++)
@@ -279,11 +322,21 @@ namespace ELibrary.Service
             }
             return roots;
         }
+
+
         public class ImpInfo
         {
-            public int ImpType { get; set; }
-            public string ParentGuid { get; set; }
+            public string ChannelIndex { get; set; }
+            public Content Info { get; set; }
+        }
+
+
+        public class ExpInfo
+        {
+           // public int ImpType { get; set; }
             public string ParentName { get; set; }
+
+            public Channel Channel { get; set; }
             public Content Info { get; set; }
         }
 

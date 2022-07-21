@@ -1,3 +1,5 @@
+@using SSCMS.Services
+@inject IAuthManager authManager
 <template v-for="style in styles" :key="style.attributeName">
   <!-- Image -->
   <template v-if="style.inputType === 'Image'">
@@ -6,13 +8,13 @@
         <el-button size="mini" type="info" icon="el-icon-upload2" plain v-on:click="btnLayerClick({title: '上传图片', name: 'formLayerImageUpload', attributeName: style.attributeName, no: 0})">
           上传
         </el-button>
-        <el-button size="mini" type="info" icon="el-icon-folder-opened" plain v-on:click="btnLayerClick({title: '选择图片素材', name: 'materialLayerImageSelect', attributeName: style.attributeName, no: 0, full: true})">
+        <el-button @authManager.IfSaShow() size="mini" type="info" icon="el-icon-folder-opened" plain v-on:click="btnLayerClick({title: '选择图片素材', name: 'materialLayerImageSelect', attributeName: style.attributeName, no: 0, full: true})">
           选择
         </el-button>
         <el-button size="mini" type="info" icon="el-icon-view" plain :disabled="form[utils.toCamelCase(style.attributeName)] ? false : true" v-on:click="btnExtendPreviewClick(style.attributeName, 0)">
           预览
         </el-button>
-        <el-button size="mini" type="info" icon="el-icon-circle-plus-outline" plain v-if="form[utils.getCountName(style.attributeName)] === 0" v-on:click="btnExtendAddClick(style)">
+        <el-button @authManager.IfSaShow() size="mini" type="info" icon="el-icon-circle-plus-outline" plain v-if="form[utils.getCountName(style.attributeName)] === 0"  v-on:click="btnExtendAddClick(style)">
           新增
         </el-button>
       </el-button-group>
@@ -54,10 +56,10 @@
         <el-button size="mini" type="info" icon="el-icon-upload2" plain v-on:click="btnLayerClick({title: '上传附件', name: 'formLayerFileUpload', attributeName: style.attributeName, no: 0})">
           上传
         </el-button>
-        <el-button size="mini" type="info" icon="el-icon-folder-opened" plain v-on:click="btnLayerClick({title: '选择附件素材', name: 'materialLayerFileSelect', attributeName: style.attributeName, no: 0, full: true})">
+        <el-button @authManager.IfSaShow() size="mini" type="info" icon="el-icon-folder-opened" plain v-on:click="btnLayerClick({title: '选择附件素材', name: 'materialLayerFileSelect', attributeName: style.attributeName, no: 0, full: true})">
           选择
         </el-button>
-        <el-button size="mini" type="info" icon="el-icon-circle-plus-outline" plain v-if="form[utils.getCountName(style.attributeName)] === 0" v-on:click="btnExtendAddClick(style)">
+        <el-button @authManager.IfSaShow() size="mini" type="info" icon="el-icon-circle-plus-outline" plain v-if="form[utils.getCountName(style.attributeName)] === 0" v-on:click="btnExtendAddClick(style)">
           新增
         </el-button>
       </el-button-group>
@@ -74,7 +76,7 @@
           <el-button size="mini" type="info" icon="el-icon-folder-opened" plain v-on:click="btnLayerClick({title: '选择附件素材', name: 'materialLayerFileSelect', attributeName: style.attributeName, no: n, full: true})">
             选择
           </el-button>
-          <el-button size="mini" type="info" icon="el-icon-circle-plus-outline" plain v-if="n === form[utils.getCountName(style.attributeName)]" v-on:click="btnExtendAddClick(style)">
+          <el-button @Html.IfShow() size="mini" type="info" icon="el-icon-circle-plus-outline" plain v-if="n === form[utils.getCountName(style.attributeName)]" v-on:click="btnExtendAddClick(style)">
             新增
           </el-button>
           <el-button size="mini" type="info" icon="el-icon-remove-outline" plain v-if="n === form[utils.getCountName(style.attributeName)]" v-on:click="btnExtendRemoveClick(style)">
@@ -90,8 +92,8 @@
     </el-form-item>
   </template>
   <!-- Video -->
-  <template v-else-if="style.inputType === 'Video'">
-    <el-form-item :label="style.displayName" :prop="utils.toCamelCase(style.attributeName)" :rules="utils.getRules(style.rules)">
+  <template  v-else-if="style.inputType === 'Video'">
+    <el-form-item @authManager.IfSaShow() :label="style.displayName" :prop="utils.toCamelCase(style.attributeName)" :rules="utils.getRules(style.rules)">
       <el-button-group>
         <el-button size="mini" type="info" icon="el-icon-upload2" plain v-on:click="btnLayerClick({title: '上传视频', name: 'formLayerVideoUpload', attributeName: style.attributeName, no: 0})">
           上传
@@ -132,8 +134,8 @@
     </el-form-item>
   </template>
   <!-- TextEditor -->
-  <template v-else-if="style.inputType === 'TextEditor'">
-    <el-form-item :label="style.displayName" :prop="utils.toCamelCase(style.attributeName)" :rules="utils.getRules(style.rules)">
+  <template  v-else-if="style.inputType === 'TextEditor'">
+    <el-form-item @Html.IfShow() :label="style.displayName" :prop="utils.toCamelCase(style.attributeName)" :rules="utils.getRules(style.rules)">
       <el-button-group style="margin-bottom: 2px;">
         <el-button size="mini" type="info" plain v-on:click="btnLayerClick({title: '导入Word', name: 'editorLayerWord', attributeName: style.attributeName})">
           导入Word
