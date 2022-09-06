@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using Datory;
 using Datory.Annotations;
+using SSCMS.Configuration;
 
 namespace SSCMS.Models
 {
-    [DataTable("siteserver_AccessToken")]
+    [DataTable(ESets.CMSDbPrefix+"_AccessToken")]
     public class AccessToken : Entity
     {
         [DataColumn]

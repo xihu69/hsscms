@@ -4,7 +4,7 @@ using Datory.Annotations;
 
 namespace SSCMS.Models
 {
-    [DataTable("siteserver_WxReplyRule")]
+    [DataTable(Configuration.ESets.CMSDbPrefix+"_WxReplyRule")]
     public class WxReplyRule : Entity
     {
         [DataColumn]

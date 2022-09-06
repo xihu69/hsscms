@@ -4,7 +4,7 @@ using SSCMS.Enums;
 
 namespace SSCMS.Models
 {
-    [DataTable("siteserver_Translate")]
+    [DataTable(Configuration.ESets.CMSDbPrefix+"_Translate")]
     public class Translate : Entity
     {
         [DataColumn]

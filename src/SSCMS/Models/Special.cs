@@ -4,7 +4,7 @@ using Datory.Annotations;
 
 namespace SSCMS.Models
 {
-    [DataTable("siteserver_Special")]
+    [DataTable(Configuration.ESets.CMSDbPrefix+"_Special")]
     public class Special : Entity
 	  {
         [DataColumn]

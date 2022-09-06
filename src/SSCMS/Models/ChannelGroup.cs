@@ -3,7 +3,7 @@ using Datory.Annotations;
 
 namespace SSCMS.Models
 {
-    [DataTable("siteserver_ChannelGroup")]
+    [DataTable(Configuration.ESets.CMSDbPrefix+"_ChannelGroup")]
     public class ChannelGroup : Entity
     {
 	      [DataColumn]

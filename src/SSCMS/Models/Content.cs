@@ -101,5 +101,7 @@ namespace SSCMS.Models
         /// </summary>
         [DataColumn]
         public string OrgiVal { get;set; }
+        [DataColumn]
+        public decimal Score { get; set; }
     }
 }

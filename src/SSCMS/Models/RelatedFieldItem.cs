@@ -3,7 +3,7 @@ using Datory.Annotations;
 
 namespace SSCMS.Models
 {
-    [DataTable("siteserver_RelatedFieldItem")]
+    [DataTable(Configuration.ESets.CMSDbPrefix+"_RelatedFieldItem")]
     public class RelatedFieldItem : Entity
 	{
         [DataColumn]

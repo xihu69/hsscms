@@ -3,7 +3,7 @@ using Datory.Annotations;
 
 namespace SSCMS.Models
 {
-    [DataTable("siteserver_MaterialAudio")]
+    [DataTable(Configuration.ESets.CMSDbPrefix+"_MaterialAudio")]
     public class MaterialAudio : Entity
     {
         [DataColumn]

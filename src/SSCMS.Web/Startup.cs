@@ -142,7 +142,7 @@ namespace SSCMS.Web
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");
             services
-                .AddControllers(op=>op.Filters.Add<ELActionFilter>())
+                .AddControllers(op=> { op.Filters.Add<ELActionFilter>(); op.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true; })
                 .AddViewLocalization(
                     LanguageViewLocationExpanderFormat.Suffix,
                     opts => { opts.ResourcesPath = "Resources"; })
@@ -243,7 +243,16 @@ namespace SSCMS.Web
             }));
 
             app.UseCors(CorsPolicy);
-
+            app.Use(async (context, next) =>
+            {
+                var url = context.Request.Path.Value;
+                if (url.Contains("/home/privacy"))
+                {
+                    context.Request.Path = "/home/index";
+                    return;
+                }
+                await next();
+            });
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto

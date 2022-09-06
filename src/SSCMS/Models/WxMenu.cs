@@ -4,7 +4,7 @@ using SSCMS.Enums;
 
 namespace SSCMS.Models
 {
-    [DataTable("siteserver_WxMenu")]
+    [DataTable(Configuration.ESets.CMSDbPrefix+"_WxMenu")]
     public class WxMenu : Entity
     {
         [DataColumn]

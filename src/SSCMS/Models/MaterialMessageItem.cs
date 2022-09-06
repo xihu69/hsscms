@@ -4,7 +4,7 @@ using SSCMS.Enums;
 
 namespace SSCMS.Models
 {
-    [DataTable("siteserver_MaterialMessageItem")]
+    [DataTable(Configuration.ESets.CMSDbPrefix+"_MaterialMessageItem")]
     public class MaterialMessageItem : Entity
     {
         [DataColumn]

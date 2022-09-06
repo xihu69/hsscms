@@ -262,9 +262,38 @@ namespace ELibrary.Utils
                 new CsvWriter(sw).WriteAllLines(data);
             }
         }
-        public static void ToCsvFile(string path, DataTable data, bool isHead = false)
+
+        public static string ToCsv(DataTable data, bool isHead = false)
         {
-            //var array = data.Rows.Cast<DataRow>().Select(p => p.ItemArray.Select(x => x as string).ToArray()).ToArray();
+            string[][] array = DataToArr(data);
+            using (var sw = new StringWriter())
+            {
+                if (isHead)
+                {
+                    //var head = data.Columns.Cast<DataColumn>().Select(p => p.ColumnName).ToArray();
+                    string[] head = GetTableColNames(data);
+                    new CsvWriter(sw).WriteAllLines(array, head);
+                }
+                else
+                    new CsvWriter(sw).WriteAllLines(array);
+                return sw.ToString();
+            }
+        }
+
+        public static string[] GetTableColNames(DataTable data)
+        {
+            var head = new string[data.Columns.Count];
+            for (int i = 0; i < data.Columns.Count; i++)
+            {
+                var item = data.Columns[i];
+                head[i] = item.ColumnName;
+            }
+
+            return head;
+        }
+
+        public static string[][] DataToArr(DataTable data)
+        {
             var array = new string[data.Rows.Count][];
             for (int i = 0; i < data.Rows.Count; i++)
             {
@@ -277,17 +306,20 @@ namespace ELibrary.Utils
                 }
                 array[i] = tmpArray;
             }
+
+            return array;
+        }
+
+        public static void ToCsvFile(string path, DataTable data, bool isHead = false)
+        {
+            //var array = data.Rows.Cast<DataRow>().Select(p => p.ItemArray.Select(x => x as string).ToArray()).ToArray();
+            string[][] array = DataToArr(data);
             using (var sw = File.Open(path, FileMode.OpenOrCreate))
             {
                 if (isHead)
                 {
                     //var head = data.Columns.Cast<DataColumn>().Select(p => p.ColumnName).ToArray();
-                    var head = new string[data.Columns.Count];
-                    for (int i = 0; i < data.Columns.Count; i++)
-                    {
-                        var item = data.Columns[i];
-                        head[i] = item.ColumnName;
-                    }
+                    string[] head = GetTableColNames(data);
                     new CsvWriter(sw).WriteAllLines(array, head);
                 }
                 else

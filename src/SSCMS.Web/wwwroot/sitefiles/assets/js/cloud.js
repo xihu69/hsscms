@@ -4,11 +4,14 @@ var cloud = _.extend(axios.create({
     Authorization: "Bearer " + localStorage.getItem('ss_cloud_access_token'),
   },
 }), {
-  host: 'https://sscms.com',
-  hostDl: 'https://dl.sscms.com',
-  hostDemo: 'https://demo.sscms.com',
-  hostStorage: 'https://storage.sscms.com',
-
+  //host:'https://sscms.com',
+  //hostDl: 'https://dl.sscms.com',
+  //hostDemo: 'https://demo.sscms.com',
+  //hostStorage: 'https://storage.sscms.com',
+  host:'',
+  hostDl: '',
+  hostDemo: '',
+  hostStorage: '',
   getDocsUrl: function(relatedUrl) {
     return this.host + '/docs/v7/' + relatedUrl;
   },

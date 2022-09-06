@@ -3,7 +3,7 @@ using Datory.Annotations;
 
 namespace SSCMS.Models
 {
-    [DataTable("siteserver_MaterialImage")]
+    [DataTable(Configuration.ESets.CMSDbPrefix+"_MaterialImage")]
     public class MaterialImage : Entity
     {
         [DataColumn]

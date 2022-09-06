@@ -62,6 +62,20 @@ namespace SSCMS.Web.Controllers.Home
                     Children = children
                 });
             }
+            if (user.SiteId > 0)
+            { 
+                var site=await siteRepository.GetAsync(user.SiteId);
+                if (site != null)
+                {
+                    return  new GetResult
+                    {
+                        User = user,
+                        HomeTitle = site.SiteName,
+                        HomeLogoUrl = site.ImageUrl,
+                        Menus = menus
+                    };
+                }
+            }
 
             return new GetResult
             {

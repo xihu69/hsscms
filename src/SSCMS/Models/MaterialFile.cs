@@ -3,7 +3,7 @@ using Datory.Annotations;
 
 namespace SSCMS.Models
 {
-    [DataTable("siteserver_MaterialFile")]
+    [DataTable(Configuration.ESets.CMSDbPrefix+"_MaterialFile")]
     public class MaterialFile : Entity
     {
         [DataColumn]

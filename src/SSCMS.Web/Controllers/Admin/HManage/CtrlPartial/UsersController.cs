@@ -42,7 +42,7 @@ namespace SSCMS.Web.Controllers.Admin.Settings.Users
             var sql= freeSql.Select<User>().Where(p => p.SiteId == request.SiteId)
                 .WhereIf(!string.IsNullOrWhiteSpace(request.Keyword), p => p.UserName.Contains(request.Keyword) || p.Email.Contains(request.Keyword) || p.Mobile.Contains(request.Keyword) || p.DisplayName.Contains(request.Keyword)).ToSql();
 
-           var users= freeSql.Select<User>().AsTable((p1,p2)=> "siteserver_User").Where(p => p.SiteId == request.SiteId)
+           var users= freeSql.Select<User>().AsTable((p1,p2)=> $"{Configuration.ESets.CMSDbPrefix}_User").Where(p => p.SiteId == request.SiteId)
                 .WhereIf(!string.IsNullOrWhiteSpace(request.Keyword),p=> p.UserName.Contains(request.Keyword) || p.Email.Contains(request.Keyword) || p.Mobile.Contains(request.Keyword) || p.DisplayName.Contains(request.Keyword))
                 .OrderBy(!string.IsNullOrWhiteSpace(request.Order),$"{request.Order} desc")
                 .Count(out var count).Page(request.Offset/request.Limit+1, request.Limit).ToList();

@@ -59,8 +59,8 @@ var methods = {
         utils.addTab('首页', utils.getRootUrl('dashboard'));
 
         $this.cmsVersion = res.cmsVersion;
-        $this.adminLogoUrl = res.adminLogoUrl || utils.getAssetsUrl('images/logo.png');
-        $this.adminTitle = res.adminTitle || 'SS CMS';
+        $this.adminLogoUrl = res.adminLogoUrl //|| utils.getAssetsUrl('images/logo.png');
+        $this.adminTitle = res.adminTitle //|| 'SS CMS';
         $this.isSuperAdmin = res.isSuperAdmin;
         $this.culture = res.culture;
         $this.plugins = res.plugins;

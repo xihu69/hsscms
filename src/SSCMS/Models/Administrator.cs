@@ -7,7 +7,7 @@ using SSCMS.Enums;
 
 namespace SSCMS.Models
 {
-    [DataTable("siteserver_Administrator")]
+    [DataTable(Configuration.ESets.CMSDbPrefix+"_Administrator")]
     public class Administrator : Entity
     {
         [DataColumn]

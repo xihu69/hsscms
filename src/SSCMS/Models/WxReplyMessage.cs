@@ -5,7 +5,7 @@ using SSCMS.Enums;
 
 namespace SSCMS.Models
 {
-    [DataTable("siteserver_WxReplyMessage")]
+    [DataTable(Configuration.ESets.CMSDbPrefix+"_WxReplyMessage")]
     public class WxReplyMessage : Entity
     {
         [DataColumn]

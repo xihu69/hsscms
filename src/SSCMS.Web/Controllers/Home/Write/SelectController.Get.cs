@@ -14,13 +14,20 @@ namespace SSCMS.Web.Controllers.Home.Write
 
             if (siteIds.Count == 0)
             {
-                if (!Services.AuthManagerExt.AppendUserSite(await _authManager.GetUserAsync(), siteIds))
+                //if (!Services.AuthManagerExt.AppendUserSite(await _authManager.GetUserAsync(), siteIds))
+                return new GetResult
+                {
+                    Unauthorized = true
+                };
+            }
+            else
+            {
+                if (!Services.AuthManagerExt.LimitUserSite(await _authManager.GetUserAsync(), siteIds))
                     return new GetResult
                     {
                         Unauthorized = true
                     };
             }
-
             var sites = new List<Select<int>>();
             foreach (var id in siteIds)
             {

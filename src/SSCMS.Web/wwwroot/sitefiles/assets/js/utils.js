@@ -889,7 +889,7 @@ if (window.swal && swal.mixin) {
 var PER_PAGE = 30;
 var DEFAULT_AVATAR_URL = '/sitefiles/assets/images/default_avatar.png';
 
-var $token = sessionStorage.getItem(ACCESS_TOKEN_NAME) || localStorage.getItem(ACCESS_TOKEN_NAME) || utils.getQueryString('accessToken');
+var $token = sessionStorage.getItem(ACCESS_TOKEN_NAME) || localStorage.getItem(ACCESS_TOKEN_NAME) || utils.getQueryString(URL_TOKEN_NAME);
 var $api = axios.create({
   baseURL: $apiUrl,
   headers: {
@@ -904,7 +904,11 @@ $api.csrfPost = function (csrfToken, url, data) {
     }
   });
 }
-
+utils.UrlAppendToken = (source) => {
+    if (!source)
+      source = location.href
+    return utils.addQuery(source, { 'access_token': $token })
+}
 utils.getUserInfo = () => {
   let base64Url = $token.split('.')[1]
   let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')

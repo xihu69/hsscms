@@ -51,5 +51,23 @@ namespace SSCMS.Services
 
         }
 
+        /// <summary>
+        /// 有站点权限，并且限制只能访问用户站点
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="siteIds"></param>
+        /// <returns></returns>
+        public static bool LimitUserSite(Models.User user, List<int> siteIds) {
+            if (user == null || user.SiteId < 1)
+                return false;
+            if (siteIds.IndexOf(user.SiteId) >= 0)
+            {
+                siteIds.Clear();
+                siteIds.Add(user.SiteId);
+                return true;
+            }
+            return false;
+        }
+
     }
 }

@@ -3,7 +3,7 @@ using Datory.Annotations;
 
 namespace SSCMS.Models
 {
-    [DataTable("siteserver_UserGroup")]
+    [DataTable(Configuration.ESets.CMSDbPrefix+"_UserGroup")]
     public class UserGroup : Entity
     {
         [DataColumn]

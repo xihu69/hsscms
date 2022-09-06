@@ -3,7 +3,7 @@ using Datory.Annotations;
 
 namespace SSCMS.Models
 {
-    [DataTable("siteserver_AdministratorsInRoles")]
+    [DataTable(Configuration.ESets.CMSDbPrefix+"_AdministratorsInRoles")]
     public class AdministratorsInRoles : Entity
     {
         [DataColumn]

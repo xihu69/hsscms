@@ -4,7 +4,7 @@ using Datory.Annotations;
 
 namespace SSCMS.Models
 {
-    [DataTable("siteserver_ContentCheck")]
+    [DataTable(Configuration.ESets.CMSDbPrefix+"_ContentCheck")]
 	public class ContentCheck : Entity
 	{
         [DataColumn]

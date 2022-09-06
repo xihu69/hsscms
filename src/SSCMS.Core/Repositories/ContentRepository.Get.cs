@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Dapper;
 using Datory;
 using SqlKata;
+using SSCMS.Configuration;
 using SSCMS.Core.StlParser.Models;
 using SSCMS.Core.Utils;
 using SSCMS.Enums;
@@ -337,7 +338,7 @@ namespace SSCMS.Core.Repositories
             var i = 1;
             do
             {
-                var tableName = $"siteserver_{name}_{i++}";
+                var tableName = $"{ESets.CMSDbPrefix}_{name}_{i++}";
                 if (!await _settingsManager.Database.IsTableExistsAsync(tableName))
                 {
                     return tableName;

@@ -6,7 +6,7 @@ using SSCMS.Enums;
 
 namespace SSCMS.Models
 {
-    [DataTable("siteserver_Config")]
+    [DataTable(Configuration.ESets.CMSDbPrefix+"_Config")]
     public class Config : Entity
     {
         [DataColumn]
@@ -88,7 +88,7 @@ namespace SSCMS.Models
 
         public string AdminLogoUrl { get; set; }
 
-        public string AdminWelcomeHtml { get; set; } = @"欢迎使用 SSCMS 管理后台";
+        public string AdminWelcomeHtml { get; set; } = @"欢迎使用 CMS 管理后台";
 
         public bool IsHomeClosed { get; set; }
 

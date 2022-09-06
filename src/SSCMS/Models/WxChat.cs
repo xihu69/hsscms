@@ -4,7 +4,7 @@ using SSCMS.Enums;
 
 namespace SSCMS.Models
 {
-    [DataTable("siteserver_WxChat")]
+    [DataTable(Configuration.ESets.CMSDbPrefix+"_WxChat")]
     public class WxChat : Entity
     {
         [DataColumn]

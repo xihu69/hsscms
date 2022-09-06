@@ -3,7 +3,7 @@ using Datory.Annotations;
 
 namespace SSCMS.Models
 {
-    [DataTable("siteserver_DbCache")]
+    [DataTable(Configuration.ESets.CMSDbPrefix+"_DbCache")]
 	public class DbCache : Entity
     {
         [DataColumn]

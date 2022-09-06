@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using SSCMS.Services
+@inject IAuthManager authManager
+@{
+    var userId = authManager.UserId;
+}
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -12,6 +17,9 @@
   <link href="/sitefiles/assets/css/ionicons-2.0.0.min.css" rel="stylesheet" type="text/css" />
   <link href="/sitefiles/assets/lib/elementui/default/index.css" rel="stylesheet" type="text/css" />
   <link href="/sitefiles/assets/css/element-ui.css" rel="stylesheet" type="text/css" />
+  <script>
+  var $authInfo={userId:@authManager.UserId,userName:"@authManager.UserName",adminId:@authManager.AdminId,adminName:"@authManager.AdminName"}
+  </script>
   @RenderSection("Styles", required: false)
 </head>
 

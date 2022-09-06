@@ -6,7 +6,7 @@ using SSCMS.Enums;
 
 namespace SSCMS.Models
 {
-    [DataTable("siteserver_TableStyle")]
+    [DataTable(Configuration.ESets.CMSDbPrefix+"_TableStyle")]
     public class TableStyle : Entity
     {
         [DataColumn]

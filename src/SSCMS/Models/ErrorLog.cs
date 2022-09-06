@@ -3,7 +3,7 @@ using Datory.Annotations;
 
 namespace SSCMS.Models
 {
-    [DataTable("siteserver_ErrorLog")]
+    [DataTable(Configuration.ESets.CMSDbPrefix+"_ErrorLog")]
     public class ErrorLog : Entity
     {
         [DataColumn]

@@ -3,7 +3,7 @@ using Datory.Annotations;
 
 namespace SSCMS.Models
 {
-    [DataTable("siteserver_WxReplyKeyword")]
+    [DataTable(Configuration.ESets.CMSDbPrefix+"_WxReplyKeyword")]
     public class WxReplyKeyword : Entity
     {
         [DataColumn]

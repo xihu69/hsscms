@@ -3,7 +3,7 @@ using Datory.Annotations;
 
 namespace SSCMS.Models
 {
-    [DataTable("siteserver_PluginConfig")]
+    [DataTable(Configuration.ESets.CMSDbPrefix+"_PluginConfig")]
     public class PluginConfig : Entity
 	{
         [DataColumn]

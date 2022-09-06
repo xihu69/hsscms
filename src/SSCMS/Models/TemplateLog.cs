@@ -3,7 +3,7 @@ using Datory.Annotations;
 
 namespace SSCMS.Models
 {
-    [DataTable("siteserver_TemplateLog")]
+    [DataTable(Configuration.ESets.CMSDbPrefix+"_TemplateLog")]
     public class TemplateLog : Entity
     {
         [DataColumn]

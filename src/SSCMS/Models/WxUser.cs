@@ -5,7 +5,7 @@ using Datory.Annotations;
 
 namespace SSCMS.Models
 {
-    [DataTable("siteserver_WxUser")]
+    [DataTable(Configuration.ESets.CMSDbPrefix+"_WxUser")]
     public class WxUser : Entity
     {
         [DataColumn]

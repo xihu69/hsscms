@@ -4,7 +4,7 @@ using SSCMS.Enums;
 
 namespace SSCMS.Models
 {
-    [DataTable("siteserver_Stat")]
+    [DataTable(Configuration.ESets.CMSDbPrefix+"_Stat")]
     public class Stat : Entity
     {
         [DataColumn]

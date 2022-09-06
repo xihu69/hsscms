@@ -7,7 +7,7 @@ using SSCMS.Enums;
 
 namespace SSCMS.Models
 {
-    [DataTable("siteserver_Site")]
+    [DataTable(Configuration.ESets.CMSDbPrefix+"_Site")]
     public class Site : Entity
     {
         [DataColumn]

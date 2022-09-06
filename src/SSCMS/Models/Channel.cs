@@ -6,7 +6,7 @@ using SSCMS.Enums;
 
 namespace SSCMS.Models
 {
-    [DataTable("siteserver_Channel")]
+    [DataTable(Configuration.ESets.CMSDbPrefix+"_Channel")]
     public class Channel : Entity, IChannelSummary
     {
         [DataColumn]

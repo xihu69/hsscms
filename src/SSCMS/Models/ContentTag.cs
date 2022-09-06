@@ -4,7 +4,7 @@ using Datory.Annotations;
 
 namespace SSCMS.Models
 {
-    [DataTable("siteserver_ContentTag")]
+    [DataTable(Configuration.ESets.CMSDbPrefix+"_ContentTag")]
     public class ContentTag : Entity
     {
         [DataColumn]

@@ -37,7 +37,7 @@ var methods = {
 
         $this.user = res.user;
 
-        $this.homeLogoUrl = res.homeLogoUrl || utils.getAssetsUrl('images/logo.png');
+        $this.homeLogoUrl = res.homeLogoUrl  //|| utils.getAssetsUrl('images/logo.png');
         $this.homeTitle = res.homeTitle || '用户中心';
         $this.menus = res.menus;
 

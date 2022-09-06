@@ -4,7 +4,7 @@ using SSCMS.Enums;
 
 namespace SSCMS.Models
 {
-    [DataTable("siteserver_MaterialArticle")]
+    [DataTable(Configuration.ESets.CMSDbPrefix+"_MaterialArticle")]
     public class MaterialArticle : Entity
     {
         [DataColumn] public int GroupId { get; set; }

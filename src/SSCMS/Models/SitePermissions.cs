@@ -4,7 +4,7 @@ using Datory.Annotations;
 
 namespace SSCMS.Models
 {
-    [DataTable("siteserver_SitePermissions")]
+    [DataTable(Configuration.ESets.CMSDbPrefix+"_SitePermissions")]
     public class SitePermissions : Entity
     {
         [DataColumn]

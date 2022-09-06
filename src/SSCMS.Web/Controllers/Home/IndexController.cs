@@ -19,12 +19,14 @@ namespace SSCMS.Web.Controllers.Home
         private readonly IAuthManager _authManager;
         private readonly IConfigRepository _configRepository;
         private readonly IUserMenuRepository _userMenuRepository;
+        private readonly ISiteRepository siteRepository;
 
-        public IndexController(IAuthManager authManager, IConfigRepository configRepository, IUserMenuRepository userMenuRepository)
+        public IndexController(IAuthManager authManager, IConfigRepository configRepository, IUserMenuRepository userMenuRepository,ISiteRepository siteRepository)
         {
             _authManager = authManager;
             _configRepository = configRepository;
             _userMenuRepository = userMenuRepository;
+            this.siteRepository = siteRepository;
         }
 
         public class GetResult

@@ -4,7 +4,7 @@ using Datory.Annotations;
 
 namespace SSCMS.Models
 {
-    [DataTable("siteserver_MaterialMessage")]
+    [DataTable(Configuration.ESets.CMSDbPrefix+"_MaterialMessage")]
     public class MaterialMessage : Entity
     {
         [DataColumn]

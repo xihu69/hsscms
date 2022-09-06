@@ -233,7 +233,7 @@ namespace SSCMS.Core.Repositories
                         var trimGroup = theGroup.Trim();
 
                         whereStringBuilder.Append(
-                                $" (siteserver_Channel.GroupNames = '{trimGroup}' OR {DatabaseUtils.GetInStr(Database, "siteserver_Channel.GroupNames", trimGroup + ",")} OR {DatabaseUtils.GetInStr(Database, "siteserver_Channel.GroupNames", "," + trimGroup + ",")} OR {DatabaseUtils.GetInStr(Database, "siteserver_Channel.GroupNames", "," + trimGroup)}) OR ");
+                                $" ({Configuration.ESets.CMSDbPrefix}_Channel.GroupNames = '{trimGroup}' OR {DatabaseUtils.GetInStr(Database, $"{Configuration.ESets.CMSDbPrefix}_Channel.GroupNames", trimGroup + ",")} OR {DatabaseUtils.GetInStr(Database, $"{Configuration.ESets.CMSDbPrefix}_Channel.GroupNames", "," + trimGroup + ",")} OR {DatabaseUtils.GetInStr(Database, $"{Configuration.ESets.CMSDbPrefix}_Channel.GroupNames", "," + trimGroup)}) OR ");
                     }
                     if (groupArr.Length > 0)
                     {
@@ -257,7 +257,7 @@ namespace SSCMS.Core.Repositories
                         //    $" (siteserver_Channel.GroupNames <> '{trimGroupNot}' AND CHARINDEX('{trimGroupNot},',siteserver_Channel.GroupNames) = 0 AND CHARINDEX(',{trimGroupNot},',siteserver_Channel.GroupNames) = 0 AND CHARINDEX(',{trimGroupNot}',siteserver_Channel.GroupNames) = 0) AND ");
 
                         whereStringBuilder.Append(
-                                $" (siteserver_Channel.GroupNames <> '{trimGroupNot}' AND {DatabaseUtils.GetNotInStr(Database, "siteserver_Channel.GroupNames", trimGroupNot + ",")} AND {DatabaseUtils.GetNotInStr(Database, "siteserver_Channel.GroupNames", "," + trimGroupNot + ",")} AND {DatabaseUtils.GetNotInStr(Database, "siteserver_Channel.GroupNames", "," + trimGroupNot)}) AND ");
+                                $" ({Configuration.ESets.CMSDbPrefix}_Channel.GroupNames <> '{trimGroupNot}' AND {DatabaseUtils.GetNotInStr(Database, $"{Configuration.ESets.CMSDbPrefix}_Channel.GroupNames", trimGroupNot + ",")} AND {DatabaseUtils.GetNotInStr(Database, $"{Configuration.ESets.CMSDbPrefix}_Channel.GroupNames", "," + trimGroupNot + ",")} AND {DatabaseUtils.GetNotInStr(Database, $"{Configuration.ESets.CMSDbPrefix}_Channel.GroupNames", "," + trimGroupNot)}) AND ");
                     }
                     if (groupNotArr.Length > 0)
                     {
@@ -275,8 +275,8 @@ namespace SSCMS.Core.Repositories
             if (isImageExists)
             {
                 whereStringBuilder.Append(isImage
-                    ? " AND siteserver_Channel.ImageUrl <> '' "
-                    : " AND siteserver_Channel.ImageUrl = '' ");
+                    ? $" AND {Configuration.ESets.CMSDbPrefix}_Channel.ImageUrl <> '' "
+                    : $" AND {Configuration.ESets.CMSDbPrefix}_Channel.ImageUrl = '' ");
             }
 
             whereStringBuilder.Append(GetGroupWhereString(group, groupNot));
@@ -340,7 +340,7 @@ namespace SSCMS.Core.Repositories
             else
             {
                 sqlString = $@"SELECT Id
-FROM siteserver_Channel 
+FROM {Configuration.ESets.CMSDbPrefix}_Channel 
 WHERE {GetSqlColumnInList("Id", channelIdList)} {whereString} {orderByString}
 ";
             }
