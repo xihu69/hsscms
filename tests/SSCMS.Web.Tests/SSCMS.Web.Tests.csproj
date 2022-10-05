@@ -29,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\SSCMS.Web\SSCMS.Web.csproj" />
+    <ProjectReference Include="..\..\src\SSCMS.Web\CMS.Web.csproj" />
   </ItemGroup>
 
 </Project>

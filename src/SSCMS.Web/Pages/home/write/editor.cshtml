@@ -37,13 +37,14 @@
   
       </el-scrollbar>
     </el-main>
-    <el-aside @SSCMS.Services.AuthManagerExt.IfSaShow(null)  v-if="isSettings" width="280px">
+    @*<el-aside @SSCMS.Services.AuthManagerExt.IfSaShow(null)  v-if="isSettings" width="280px">*@
+         <el-aside  v-if="false" width="280px">
       <el-scrollbar class="scrollbar" :style="{height: mainHeight}">
         
         <el-collapse v-model="collapseSettings" style="margin-left: 5px;">
           <el-collapse-item title="审核状态" name="checkedLevel">
             <el-select v-model="form.checkedLevel" size="small" style="width: 100%;">
-              <el-option
+              <el-option 
                 v-for="level in checkedLevels"
                 :key="level.value"
                 :label="level.label"

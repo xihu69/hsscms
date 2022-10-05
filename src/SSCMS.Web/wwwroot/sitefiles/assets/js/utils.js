@@ -910,6 +910,8 @@ utils.UrlAppendToken = (source) => {
     return utils.addQuery(source, { 'access_token': $token })
 }
 utils.getUserInfo = () => {
+  if (!$token)
+    return {}
   let base64Url = $token.split('.')[1]
   let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
   let info = JSON.parse(window.atob(base64))

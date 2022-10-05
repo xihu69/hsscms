@@ -19,9 +19,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		web.config = web.config
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SSCMS.Core", "src\SSCMS.Core\SSCMS.Core.csproj", "{360F8930-C570-4747-BB9F-D66C4B460468}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CMS.Core", "src\SSCMS.Core\CMS.Core.csproj", "{360F8930-C570-4747-BB9F-D66C4B460468}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SSCMS.Cli", "src\SSCMS.Cli\SSCMS.Cli.csproj", "{224FF8EA-D7AA-41C3-96C8-02C97CD40828}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CMS.Cli", "src\SSCMS.Cli\CMS.Cli.csproj", "{224FF8EA-D7AA-41C3-96C8-02C97CD40828}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SSCMS.Core.Tests", "tests\SSCMS.Core.Tests\SSCMS.Core.Tests.csproj", "{10B8E9B0-F3DC-4B41-B6E3-83CD1645E649}"
 EndProject
@@ -31,7 +31,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SSCMS", "src\SSCMS\SSCMS.cs
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SSCMS.Tests", "tests\SSCMS.Tests\SSCMS.Tests.csproj", "{AE00C669-2E15-440B-829B-C054B63DF564}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SSCMS.Web", "src\SSCMS.Web\SSCMS.Web.csproj", "{52CBA2D4-F857-4660-AF94-2704ED9AA3F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CMS.Web", "src\SSCMS.Web\CMS.Web.csproj", "{52CBA2D4-F857-4660-AF94-2704ED9AA3F7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SSCMS.Web.Tests", "tests\SSCMS.Web.Tests\SSCMS.Web.Tests.csproj", "{CCE9B25D-0537-48B4-98C8-F8F119631ABC}"
 EndProject
@@ -39,7 +39,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Datory", "src\Datory\Datory
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Datory.Tests", "tests\Datory.Tests\Datory.Tests.csproj", "{295E32F3-E721-4EC8-9BE3-7BE69FA2DCC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ELibrary", "ELibrary\ELibrary.csproj", "{CB031431-F514-4FA4-964F-A761CB617EBE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ELibrary", "ELibrary\ELibrary.csproj", "{CB031431-F514-4FA4-964F-A761CB617EBE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

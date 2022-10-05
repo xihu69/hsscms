@@ -6,23 +6,19 @@
     <Version>7.1.2</Version>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
-    <ApplicationIcon>logo.ico</ApplicationIcon>
     <!--<EnableDefaultContentItems>false</EnableDefaultContentItems>-->
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);1591</NoWarn>
-    <AssemblyName>SSCMS.Web</AssemblyName>
+    <AssemblyName>CMS.Web</AssemblyName>
     <StartupObject></StartupObject>
+    <!--<ApplicationIcon>logo.ico</ApplicationIcon>-->
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="packages\**" />
-    <Compile Remove="plugins\**" />
     <Content Remove="packages\**" />
-    <Content Remove="plugins\**" />
     <EmbeddedResource Remove="packages\**" />
-    <EmbeddedResource Remove="plugins\**" />
     <None Remove="packages\**" />
-    <None Remove="plugins\**" />
   </ItemGroup>
 
   <!--<ItemGroup>
@@ -45,11 +41,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\ELibrary\ELibrary.csproj" />
-    <ProjectReference Include="..\SSCMS.Core\SSCMS.Core.csproj" />
+    <ProjectReference Include="..\SSCMS.Core\CMS.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Watch Include="plugins\**\*.cshtml;plugins\**\*.cs" Exclude="plugins\*\obj\**\*;plugins\bin\**\*" />
+    <Watch Include="plugins\**\*.cshtml;plugins\**\*.cs" />
   </ItemGroup>
 
   <ItemGroup>

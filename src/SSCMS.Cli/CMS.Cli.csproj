@@ -7,7 +7,7 @@
     <ApplicationIcon>logo.ico</ApplicationIcon>
     <Version>7.1.2</Version>
     <NoWarn>$(NoWarn);1591</NoWarn>
-    <AssemblyName>SSCMS.Cli</AssemblyName>
+    <AssemblyName>CMS.Cli</AssemblyName>
     <StartupObject>SSCMS.Cli.Program</StartupObject>
   </PropertyGroup>
 
@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SSCMS.Core\SSCMS.Core.csproj" />
+    <ProjectReference Include="..\SSCMS.Core\CMS.Core.csproj" />
   </ItemGroup>
 
 

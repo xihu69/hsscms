@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\SSCMS.Core\SSCMS.Core.csproj" />
+    <ProjectReference Include="..\..\src\SSCMS.Core\CMS.Core.csproj" />
   </ItemGroup>
 
 </Project>

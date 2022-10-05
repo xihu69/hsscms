@@ -265,6 +265,7 @@ namespace SSCMS.Web
             options.DefaultFileNames.Add("index.html");
             app.UseDefaultFiles(options);
 
+            app.UseStaticFiles(new StaticFileOptions { ServeUnknownFileTypes = true });
             //if (settingsManager.Containerized)
             //{
             //    app.Map($"/{DirectoryUtils.SiteFiles.DirectoryName}/assets", assets =>

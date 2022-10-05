@@ -22,6 +22,14 @@ namespace SSCMS.Web.Controllers.Home.Write
                     Unauthorized = true
                 };
             }
+            else
+            {
+                if (!Services.AuthManagerExt.LimitUserSite(await _authManager.GetUserAsync(), siteIds))
+                    return new GetResult
+                    {
+                        Unauthorized = true
+                    };
+            }
 
             var sites = new List<Select<int>>();
             foreach (var siteId in siteIds)

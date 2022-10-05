@@ -108,7 +108,7 @@ var methods = {
       $this.groupNames = res.groupNames;
       $this.tagNames = res.tagNames;
       $this.checkedLevels = res.checkedLevels;
-
+      console.log($this.checkedLevels)
       $this.siteOptions = res.siteOptions;
       $this.channelOptions = res.channelOptions;
 
@@ -181,7 +181,8 @@ var methods = {
 
   apiInsert: function() {
     var $this = this;
-
+    $this.form.checkedLevel = 0 //设置待审核
+    console.log(this.form)
     utils.loading(this, true);
     $api.post($url, {
       siteId: this.siteId,
@@ -268,7 +269,7 @@ var methods = {
         editor.sync();
       });
     }
-
+    debugger
     if (this.contentId === 0) {
       this.apiInsert();
     } else {
@@ -288,6 +289,7 @@ var methods = {
 
     var $this = this;
     utils.loading(this, true);
+
     $api.post($urlPreview, {
       siteId: this.siteId,
       channelId: this.channelId,
