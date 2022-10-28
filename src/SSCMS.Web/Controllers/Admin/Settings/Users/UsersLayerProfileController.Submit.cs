@@ -4,6 +4,7 @@ using SSCMS.Dto;
 using SSCMS.Models;
 using SSCMS.Utils;
 using SSCMS.Core.Utils;
+using ELibrary.Utils;
 
 namespace SSCMS.Web.Controllers.Admin.Settings.Users
 {
@@ -12,11 +13,10 @@ namespace SSCMS.Web.Controllers.Admin.Settings.Users
         [HttpPost, Route(Route)]
         public async Task<ActionResult<BoolResult>> Submit([FromBody] User request)
         {
+            if (await UsersController.chaeckSiteSettingsUsers(_authManager, request.SiteId))
+            { 
+            }else 
             if (!await _authManager.HasAppPermissionsAsync(MenuUtils.AppPermissions.SettingsUsers))
-            {
-                return Unauthorized();
-            }
-            else if(!await UsersController.chaeckSiteSettingsUsers(_authManager,request.SiteId))
             {
                 return Unauthorized();
             }
@@ -65,7 +65,8 @@ namespace SSCMS.Web.Controllers.Admin.Settings.Users
 
                     request.MobileVerified = false;
                 }
-
+                if (request.SiteId == 0)
+                    request.SiteId = user.SiteId;
                 var (success, errorMessage) = await _userRepository.UpdateAsync(request);
                 if (!success)
                 {

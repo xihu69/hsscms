@@ -66,9 +66,11 @@ namespace ELibrary.Utils
             r.Close();
             fs.Position = 0;
             return reVal;
-
         }
-
+        public static System.Text.Encoding GetType(FileStream fs, string encodingDef = null) {
+            Encoding reVal = encodingDef==null ? Encoding.Default: Encoding.GetEncoding(encodingDef);
+            return GetType(fs, reVal);
+        }
         /// <summary> 
         /// 判断是否是不带 BOM 的 UTF8 格式 
         /// </summary> 

@@ -259,13 +259,13 @@ namespace SSCMS.Web
             });
 
             //app.UseHttpsRedirection();
-
+ 
             var options = new DefaultFilesOptions();
             options.DefaultFileNames.Clear();
             options.DefaultFileNames.Add("index.html");
             app.UseDefaultFiles(options);
-
-            app.UseStaticFiles(new StaticFileOptions { ServeUnknownFileTypes = true });
+app.UseStaticFiles(new StaticFileOptions { ServeUnknownFileTypes = true,DefaultContentType= "application/octet-stream" });
+           
             //if (settingsManager.Containerized)
             //{
             //    app.Map($"/{DirectoryUtils.SiteFiles.DirectoryName}/assets", assets =>
@@ -286,8 +286,8 @@ namespace SSCMS.Web
                     await next();
                 }
             });
-            app.UseStaticFiles();
-
+           // app.UseStaticFiles();
+           // app.UseStaticFiles(new StaticFileOptions { ServeUnknownFileTypes = true });
             var supportedCultures = new[]
             {
                 new CultureInfo("en-US"),

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using ELibrary.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,13 +18,13 @@ namespace SSCMS.Web.Controllers.Admin.Settings.Users
         public UsersController(IAuthManager authManager, IPathManager pathManager, IDatabaseManager databaseManager, IUserRepository userRepository, IUserGroupRepository userGroupRepository,IFreeSql freeSql) :this(authManager,pathManager,databaseManager,userRepository,userGroupRepository){
             this.freeSql = freeSql;
         }
-        public const string SiteSettingsUsers = "web_settings_users";
+        public const string SiteSettingsUsers = PowerSign.Site.settings_users;
         private readonly IFreeSql freeSql;
 
 
         public static async Task<bool> chaeckSiteSettingsUsers(IAuthManager authManager, int siteId)
         {
-            return siteId < 0 ? false : await authManager.HasSitePermissionsAsync(siteId, SiteSettingsUsers);
+            return siteId <= 0 ? false : await authManager.HasSitePermissionsAsync(siteId, SiteSettingsUsers);
         }
         //[controller]/[action]
         [HttpGet, Route(Route+"/[action]")]

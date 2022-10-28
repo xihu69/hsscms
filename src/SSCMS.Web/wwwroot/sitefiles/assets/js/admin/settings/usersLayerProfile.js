@@ -2,6 +2,7 @@
 
 var data = utils.init({
   userId: utils.getQueryInt('userId'),
+  siteId: utils.getQueryInt('siteId'),
   uploadUrl: null,
   uploadFileList: [],
   form: null,
@@ -57,6 +58,7 @@ var methods = {
     var $this = this;
 
     utils.loading(this, true);
+    this.form.siteId = this.siteId
     $api.post($url, this.form).then(function (response) {
       utils.success($this.form.id > 0 ? '用户编辑成功！' : '用户添加成功！');
       utils.closeLayer(true);
@@ -193,5 +195,6 @@ var $vue = new Vue({
     utils.keyPress(this.btnSubmitClick, this.btnCancelClick);
     this.uploadUrl = $apiUrl + $url + '/actions/upload?userId=' + this.userId;
     this.apiGet();
+    
   }
 });

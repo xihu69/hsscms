@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using ELibrary.Utils;
 using Microsoft.AspNetCore.Mvc;
 using SSCMS.Configuration;
 using SSCMS.Core.Utils;
@@ -11,7 +12,8 @@ namespace SSCMS.Web.Controllers.Admin.Settings.Users
         [HttpGet, Route(Route)]
         public async Task<ActionResult<GetResult>> Get([FromQuery] int userId)
         {
-            if (!await _authManager.HasAppPermissionsAsync(MenuUtils.AppPermissions.SettingsUsers))
+            //!await _authManager.HasAppPermissionsAsync(MenuUtils.AppPermissions.SettingsUsers,PowerSign.Site.settings_users)
+            if (_authManager.AdminId<1)
             {
                 return Unauthorized();
             }

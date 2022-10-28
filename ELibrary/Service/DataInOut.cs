@@ -72,7 +72,7 @@ namespace ELibrary.Service
             var nowChannels = new List<Channel>();
             using (var stream = System.IO.File.OpenRead(filePath))
             {
-                var encod = GuessEncoding.GetType(stream,Encoding.GetEncoding("gb2312"));
+                var encod = GuessEncoding.GetType(stream,"gb2312");
                 stream.Position = 0;
                 var csvr = new CsvReader(stream, encod);
 

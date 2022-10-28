@@ -257,16 +257,18 @@ var methods = {
   },
 
   btnAddClick: function() {
+      let self=this
     utils.openLayer({
       title: '添加用户',
-      url: utils.getSettingsUrl('usersLayerProfile')
+      url: utils.getSettingsUrl('usersLayerProfile',{siteId:self.formInline.siteId})
     });
   },
 
   btnEditClick: function(row) {
+       let self=this
     utils.openLayer({
       title: '编辑用户',
-      url: utils.getSettingsUrl('usersLayerProfile', {userId: row.id})
+      url: utils.getSettingsUrl('usersLayerProfile', {userId: row.id,siteId:self.formInline.siteId})
     });
   },
 
