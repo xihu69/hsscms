@@ -1,0 +1,299 @@
+﻿
+@page
+@using SSCMS.Services
+@inject IAuthManager authManager
+
+@{ 
+    ///EL: 复制users.cshtml 修改
+    //Layout = "_Layout";
+}
+
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>文件上传工具</title>
+    <link href="/libs/web-uploader-1.8/demo/demo.css" rel="stylesheet" type="text/css" />
+    <link href="/libs/web-uploader-1.8/css/uploader.all.css" rel="stylesheet" type="text/css" />
+    <style>
+    .x-button{
+    background-color: #00b19d;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="header" class="header">文件上传工具</div>
+    <div class="main">
+        <div class="content">
+            <div class="contentin" style="margin-left:20px;max-width:1920px;min-width:1024">
+                <div>
+                   
+                    <a id="upload-target" class="x-button">选择文件并上传</a>
+                    <a id="upload-submit" class="x-button">确认上传</a>
+                    <a id="upload-res" class="x-button" onclick="delRes()">移除重复名称</a>
+                </div>
+                <div id="upload-view"></div>
+                <div id="log"></div>
+            </div>
+        </div>
+        <div id="sidebar" class="sidebar"></div>
+    </div>
+
+    <!--<script type="text/javascript" src="./libs/web-uploader-1.8/demo/demo.js"></script>-->
+
+    <script type="text/javascript" src="/libs/web-uploader-1.8/js/Q.js"></script>
+    <script type="text/javascript" src="/libs/web-uploader-1.8/js/spark-md5.js"></script>
+    <script type="text/javascript" src="/libs/web-uploader-1.8/js/Q.md5File.js"></script>
+    <script type="text/javascript" src="/libs/web-uploader-1.8/js/Q.Uploader.js"></script>
+    <script type="text/javascript" src="/libs/web-uploader-1.8/js/Q.Uploader.slice.js"></script>
+    <script type="text/javascript" src="/libs/web-uploader-1.8/js/Q.Uploader.UI.File.js"></script>
+
+    <script src="/sitefiles/assets/js/utils.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        let query={
+            siteId: utils.getQueryInt('siteId'),
+            channelId: utils.getQueryInt('channelId'),
+            title:utils.getQueryString('title')
+            userId:''
+        }
+        console.log(query)
+
+        function log(msg) {
+            document.getElementById("log").innerHTML += (msg != undefined ? msg : "") + "<br />";
+        }
+
+        //简易hash计算
+        function computeHash(file, callback) {
+            var blobSlice = File.prototype.slice || File.prototype.mozSlice || File.prototype.webkitSlice,
+                spark = new SparkMD5.ArrayBuffer();
+
+            var fr = new FileReader(),
+                size = file.size,
+                chunkSize = 100 * 1024,
+                startTime = Date.now(),
+                bufferStart = 0,
+                bufferEnd = 0;
+
+            spark.reset();
+
+            fr.onload = function (e) {
+                spark.append(e.target.result);
+
+                if (bufferEnd >= size) return callback && callback(spark.end(), Date.now() - startTime);
+
+                var middleSize = Math.floor(size / 2);
+                if (bufferEnd < middleSize) {
+                    //计算中间100KB
+                    loadBuffer(middleSize - chunkSize / 2, middleSize + chunkSize / 2);
+                } else {
+                    //计算尾部100KB
+                    loadBuffer(size - chunkSize, size);
+                }
+            };
+
+            fr.onerror = callback;
+
+            var loadBuffer = function (start, end) {
+                bufferStart = start;
+                bufferEnd = end;
+
+                fr.readAsArrayBuffer(blobSlice.call(file, start, end));
+            };
+
+            loadBuffer(0, size <= 300 * 1024 ? size : chunkSize);
+        }
+
+        var Uploader = Q.Uploader;
+
+        var uploader = new Uploader({
+            url:  '/api/HManage/Contents/Upload',//UPLOAD_URL,
+            urlForQuery: '/api/HManage/Contents/UpInfo',//UPLOAD_URL,  //秒传或分片上传查询接口，未指定时默认使用上传接口
+            target: document.getElementById("upload-target"),
+            view: document.getElementById("upload-view"),
+            upName:'files',
+            isSlice: true,                  //是否启用分片上传，若为true，则isQueryState和isMd5默认为true
+            chunkSize: 4 * 1024 * 1024,     //默认分片大小为2MB
+            //isQueryState: true,           //是否查询文件状态（for 秒传或续传）
+            sliceRetryCount: 1,             //分片上传失败重试次数,默认为2
+
+            //基于md5的秒传和断点续传，不限于浏览器或机器，只要文件相同，均可
+            //若自己实现hash计算，可配置isMd5为false，见下面 hashAsync 事件
+            //isMd5: true,
+
+            //是否在Hash计算完毕后再上传
+            //isUploadAfterHash: true,
+
+            //allows: ".txt,.jpg,.png,.gif,.zip,.rar,.7z",
+
+            //每次上传都会发送的参数(POST方式)
+            data:query,
+            auto: false,
+            allows: '.txt,.docx,.pdf,.jpg,.png,.gif,.bmp,.mp4,.mp3',
+            disallows:'.exe,.bat,.dll,.tmp',
+            /*
+                上传回调事件：
+                init,          //上传管理器初始化完毕后触发
+
+                select,        //点击上传按钮准备选择上传文件之前触发,返回false可禁止选择文件
+                add[Async],    //添加任务之前触发,返回false将跳过该任务
+                upload[Async], //上传任务之前触发,返回false将跳过该任务
+                hashProgress,  //文件hash进度（仅isMd5为true时有效）
+                hash[Async],   //查询状态之前触发（for 秒传或续传）
+                send[Async],   //发送数据之前触发,返回false将跳过该任务
+
+                cancel,        //取消上传任务后触发
+                remove,        //移除上传任务后触发
+
+                progress,      //上传进度发生变化后触发(仅html5模式有效)
+                complete       //上传完成后触发
+            */
+            on: {
+                //添加之前触发
+                add: function (task) {
+                    //不会添加exe文件
+                    //if (task.ext == ".exe") return false;
+                   
+                    if (task.disabled) return alert("-允许上传的文件格式为：" + this.ops.allows);
+                    log(task.name + ": 已添加!");
+                },
+
+                //任务移除后触发
+                remove: function (task) {
+                    log(task.name + ": 已移除!");
+                },
+
+                //上传之前触发
+                upload: function (task) {
+                    console.log("任务数：", this.list)
+                    
+
+                    //exe文件可以添加，但不会上传
+                    if (task.ext == ".exe") return false;
+
+                    //可针对单独的任务配置参数(POST方式)
+                    task.data = { name: Date.now() + task.ext };
+                },
+
+                //文件hash进度（未指定 hashAsync 且 isMd5 为true 且存在 Q.md5File 方法时生效）
+                //hashProgress: function (task, pvg) {
+                //    document.title = "hash: " + (pvg * 100).toFixed(2) + "%";
+                //},
+
+                //自己实现hash计算，查询状态之前触发（for 秒传或续传）
+                hashAsync: function (task, callback) {
+                    //Q.md5File(task.file, function (md5) {
+                    //    //task.hash: 秒传或断点续传唯一标识
+                    //    task.hash = md5;
+                    //    callback();
+                    //}, function (pvg) {
+                    //    //hash进度
+                    //    document.title = "hash: " + (pvg * 100).toFixed(2) + "%";
+                    //});
+
+                    computeHash(task.file, function (hash, time) {
+                        task.hash = hash + task.size;
+                        log(task.name + ' hash time: ' + time + 'ms');
+                        callback();
+                    });
+                },
+
+                //秒传查询之前
+                beforeQuery: function (task) {
+                    log(task.name + ": " + task.queryUrl);
+
+                    //console.log(task);
+
+                    //自定义查询路径
+                    //task.queryUrl = task.url + "&action=query&hash=" + task.hash;
+                },
+
+                //秒传查询之后
+                query: function (task) {
+                    //服务器返回的json数据 eg: { "code": 0, data: {} }
+                    var json = task.json,
+                        data = json ? json.data : undefined;
+
+                    if (data) {
+                        
+                        //秒传成功
+                        if (data.ok || data.url) return -1;
+
+                        //从指定位置开始上传
+                        return data.start;
+                    }
+
+                    //从0开始上传
+                    return 0;
+                },
+
+                //分片上传之前触发（for 秒传或续传）
+                sliceUploadAsync: function (task, callback) {
+                    log(task.name + ": 上传分片 " + task.sliceIndex + " / " + task.sliceCount);
+
+                    //返回false将跳过该分片
+                    //callback(false);
+
+                    callback();
+                },
+
+                //上传完成后触发
+                complete: function (task) {
+                    if (task.state != Uploader.COMPLETE) return log(task.name + ": " + Uploader.getStatusText(task.state) + "！");
+
+                    if (task.queryOK) log(task.name + ": 秒传成功！");
+
+                    var json = task.json;
+                    if (!json) return log(task.name + ": 服务器未返回正确的数据！<br />");
+
+                    log(task.name + ": 服务器返回 " + (task.response || ""));
+                    log();
+
+                    //this.list  为上传任务列表
+                    //this.index 为当前上传任务索引
+                    if (this.index >= this.list.length - 1) {
+                        //所有任务上传完成
+                        log("所有任务上传完成：" + new Date() + "<br />");
+                    }
+                }
+            }
+        });
+        
+        document.getElementById("upload-submit").onclick = function () {
+            let s = getResItems()
+            s = s.map(p=>p.name).join(',')
+            
+            if (s.length<1)
+                uploader.start();
+            else {
+                alert('上传文件名称重复：' + s)
+            }
+        };
+        function getResItems() {
+            let s = []
+            uploader.list.filter(p => !p.deleted).map(p => p).sort((a, b) => a.name == b.name ? 0 : a.name > b.name ? 1 : -1).sort((a, b) => a.name == b.name ? s.push(a) : 1)
+            return s
+        }
+        function delRes() {
+            let s = getResItems()
+            s = s.filter(p => p != '')
+            s.forEach(p => uploader.list[p.index].deleted2 = true)
+            uploader.list.filter(p => !!p.deleted2).forEach(p => {
+                uploader.remove(p.id)
+                uploader.ops.view.removeChild(p.box)
+            })
+
+        }
+    </script>
+</body>
+</html>
+
+
+@section Scripts{
+   @*
+       <script src="/sitefiles/assets/js/admin/cms/contentsLayerAdd.js" type="text/javascript"></script>
+    ///EL: 复制 users.js 修改
+   *@
+   
+}

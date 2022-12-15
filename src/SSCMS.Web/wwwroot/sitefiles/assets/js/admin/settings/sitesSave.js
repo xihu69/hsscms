@@ -66,7 +66,7 @@ var methods = {
 
   btnNextClick: function () {
     var $this = this;
-
+    debugger
     if ($this.active === 0) {
       this.$refs.form.validate(function(valid) {
         if (valid) {
@@ -122,6 +122,7 @@ var methods = {
       $this.active = 3;
 
       setTimeout(function () {
+        debugger
         location.href = utils.getSettingsUrl('sitesTemplates');
       }, 3000);
     }).catch(function (error) {

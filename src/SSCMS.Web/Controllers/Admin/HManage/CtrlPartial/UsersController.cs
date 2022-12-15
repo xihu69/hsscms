@@ -56,6 +56,7 @@ namespace SSCMS.Web.Controllers.Admin.Settings.Users
                 Groups = groups
             };
         }
+
       public  class SiteGetRequest: GetRequest
         { 
             public int SiteId { get; set; }

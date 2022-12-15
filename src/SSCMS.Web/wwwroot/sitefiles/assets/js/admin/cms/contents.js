@@ -213,12 +213,15 @@ var methods = {
   },
 
   btnImportClick: function (command) {
+    debugger
     if (command === 'Word') {
-      this.btnLayerClick({title: '批量导入Word', name: 'Word', full: true});
+      this.btnLayerClick({ title: '批量导入Word', name: 'Word', full: true });
     } else if (command === 'Import') {
-      this.btnLayerClick({title: '批量导入', name: 'Import', full: true});
+      this.btnLayerClick({ title: '批量导入', name: 'Import', full: true });
     } else if (command === 'Add') {
-      this.btnLayerClick({title: '批量添加', name: 'Add', full: true});
+      this.btnLayerClick({ title: '批量添加', name: 'Add', full: true });
+    } else if (command === 'AddUpload'){
+      this.btnLayerClick({ title: '通过上传工具批量添加', name: 'SiteUpload', openType:'_blank' });
     }
   },
 
@@ -324,7 +327,12 @@ var methods = {
       if (!this.isContentChecked) return;
       query.channelContentIds = this.channelContentIdsString;
     }
-
+    if (options.name == 'SiteUpload') {
+      debugger
+      let url = utils.getCmsUrl(options.name, query);
+      setTimeout (()=>window.open( url,options.openType),200)
+      return
+    }
     options.url = utils.getCmsUrl('contentsLayer' + options.name, query);
     utils.openLayer(options);
   },

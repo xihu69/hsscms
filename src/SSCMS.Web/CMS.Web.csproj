@@ -517,6 +517,32 @@
     <None Include="wwwroot\libs\pdfjs-dist\web\pdf_viewer.js.map" />
     <None Include="wwwroot\libs\turn\turn.html4.min.js" />
     <None Include="wwwroot\libs\turn\turn.js" />
+    <None Include="wwwroot\libs\web-uploader-1.8\api\upload.ashx" />
+    <None Include="wwwroot\libs\web-uploader-1.8\build\build.bat" />
+    <None Include="wwwroot\libs\web-uploader-1.8\build\build.data.js" />
+    <None Include="wwwroot\libs\web-uploader-1.8\demo\demo.js" />
+    <None Include="wwwroot\libs\web-uploader-1.8\demo\jquery-1.11.1.js" />
+    <None Include="wwwroot\libs\web-uploader-1.8\demo\Q.tabs.js" />
+    <None Include="wwwroot\libs\web-uploader-1.8\dist\js\Q.js" />
+    <None Include="wwwroot\libs\web-uploader-1.8\dist\js\Q.md5File.js" />
+    <None Include="wwwroot\libs\web-uploader-1.8\dist\js\Q.Uploader.js" />
+    <None Include="wwwroot\libs\web-uploader-1.8\dist\js\Q.Uploader.slice.js" />
+    <None Include="wwwroot\libs\web-uploader-1.8\dist\js\Q.Uploader.UI.File.js" />
+    <None Include="wwwroot\libs\web-uploader-1.8\dist\js\Q.Uploader.UI.Image.js" />
+    <None Include="wwwroot\libs\web-uploader-1.8\dist\js\spark-md5.js" />
+    <None Include="wwwroot\libs\web-uploader-1.8\dist\Q.Uploader.file.all.js" />
+    <None Include="wwwroot\libs\web-uploader-1.8\dist\Q.Uploader.image.all.js" />
+    <None Include="wwwroot\libs\web-uploader-1.8\js\Q.js" />
+    <None Include="wwwroot\libs\web-uploader-1.8\js\Q.md5File.js" />
+    <None Include="wwwroot\libs\web-uploader-1.8\js\Q.Uploader.js" />
+    <None Include="wwwroot\libs\web-uploader-1.8\js\Q.Uploader.slice.js" />
+    <None Include="wwwroot\libs\web-uploader-1.8\js\Q.Uploader.UI.File.js" />
+    <None Include="wwwroot\libs\web-uploader-1.8\js\Q.Uploader.UI.Image.js" />
+    <None Include="wwwroot\libs\web-uploader-1.8\js\spark-md5.js" />
+    <None Include="wwwroot\libs\web-uploader-1.8\Q.Uploader.file.all.js" />
+    <None Include="wwwroot\libs\web-uploader-1.8\Q.Uploader.image.all.js" />
+    <None Include="wwwroot\libs\web-uploader-1.8\README.md" />
+    <None Include="wwwroot\libs\web-uploader-1.8\web.config" />
   </ItemGroup>
 
   <ItemGroup>

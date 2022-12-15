@@ -6,6 +6,24 @@ namespace SSCMS.Services
 {
     public static class AuthManagerExt
     {
+
+        /// <summary>
+        ///默认  v-if='utils.isSa'
+        /// </summary>
+        /// <param name="auth"></param>
+        /// <param name="y"></param>
+        /// <param name="no"></param>
+        /// <returns></returns>
+        public static IHtmlContent IsSaStr(this IAuthManager auth,string y=null,string no=null) {
+            if (y == null)
+                y = " v-if='utils.isSa' ";
+            if (no == null)
+                no = " v-if='utils.isSa' ";
+             if (auth.AdminName == "sa")
+                return new HtmlString(y);
+             else
+                return new HtmlString(no);
+        }
         public static IHtmlContent IfSaShow(this IAuthManager auth)
         {
             return new HtmlString($" ");

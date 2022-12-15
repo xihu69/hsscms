@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="FreeSql.Provider.Sqlite" Version="3.2.640" />
     <PackageReference Include="FreeSql.Provider.SqlServer" Version="3.2.640" />
+    <PackageReference Include="iTextSharp.LGPLv2.Core" Version="1.9.2" />
     <PackageReference Include="Masuit.Tools.AspNetCore" Version="1.0.6.2" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />

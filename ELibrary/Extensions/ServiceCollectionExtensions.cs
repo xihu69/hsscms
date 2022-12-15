@@ -20,6 +20,8 @@ namespace ELibrary.Extensions
             services.AddSingleton(fsql);
             services.AddTransient<DataInOut>();
             services.AddTransient<UserCore>();
+            services.AddTransient<ContentSubscribe>();
+            services.AddTransient<SubscribeClient>();
         }
 
     }

@@ -1,4 +1,5 @@
-﻿using SSCMS.Utils;
+﻿using ELibrary.Utils;
+using SSCMS.Utils;
 using Xunit;
 
 namespace SSCMS.Tests
@@ -18,5 +19,6 @@ namespace SSCMS.Tests
             var replaced = StringUtils.ReplaceEndsWithIgnoreCase("UserName desc", " DESC", string.Empty);
             Assert.Equal("UserName", replaced);
         }
+ 
     }
 }

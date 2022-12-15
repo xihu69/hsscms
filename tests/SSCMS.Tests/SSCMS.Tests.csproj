@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\ELibrary\ELibrary.csproj" />
     <ProjectReference Include="..\..\src\SSCMS.Core\CMS.Core.csproj" />
   </ItemGroup>
 

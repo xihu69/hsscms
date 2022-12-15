@@ -14,6 +14,8 @@ using System.Threading.Tasks;
 using SSCMS.Services;
 using ELibrary.Service;
 using System.Text;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace SSCMS.Web.Controllers.Admin.HManage
 {
@@ -29,8 +31,9 @@ namespace SSCMS.Web.Controllers.Admin.HManage
         private readonly DataInOut dataInOut;
         private readonly ContentSubscribe contentSubscribe;
         private readonly SubscribeClient subscribeClient;
+        private readonly IWebHostEnvironment webHostEnvironment;
 
-        public ContentsController(IFreeSql freeSql, ISiteRepository siteRepository, IChannelRepository channelRepository, IContentRepository contentRepository, ICreateManager createManager,DataInOut dataInOut,ContentSubscribe  contentSubscribe,SubscribeClient subscribeClient)
+        public ContentsController(IFreeSql freeSql, ISiteRepository siteRepository, IChannelRepository channelRepository, IContentRepository contentRepository, ICreateManager createManager,DataInOut dataInOut,ContentSubscribe  contentSubscribe,SubscribeClient subscribeClient, IWebHostEnvironment webHostEnvironment)
         {
             this.freeSql = freeSql;
             _siteRepository = siteRepository;
@@ -40,6 +43,7 @@ namespace SSCMS.Web.Controllers.Admin.HManage
             this.dataInOut = dataInOut;
             this.contentSubscribe = contentSubscribe;
             this.subscribeClient = subscribeClient;
+            this.webHostEnvironment = webHostEnvironment;
         }
         /// <summary>导出图书
         /// 
@@ -95,6 +99,102 @@ namespace SSCMS.Web.Controllers.Admin.HManage
               return  await  contentSubscribe.GetBooksInfoAsync(bookGids);
         }
 
+        public object UpInfo()
+        {
+            var request = Request;
+            string action = request.Query["action"];
+            string hash = request.Query["hash"];
+            var fileName = request.Query["fileName"];
+            string upPath = webHostEnvironment.WebRootPath + "/upload/";
+            var fileExt = Path.GetExtension(fileName).ToLower();
+            string path_ok = upPath + hash + fileExt;
+            string pathTmp = Name2Tmp(path_ok);
+
+            if (System.IO.File.Exists(path_ok))
+                return new { data = new { ok = true } };
+            else if (System.IO.File.Exists(pathTmp))
+                return new FileInfo(pathTmp).Length.ToString();
+            else
+                return "0";
+        }
+        string Name2Tmp(string fileName)
+        {
+            return fileName + ".tmp";
+        }
+       public class ResultData<T>: ResultData
+        {
+            public T Data { get; set; }
+          
+        }
+        public class ResultData {
+            public static ResultData Re(string error) {
+                if (string.IsNullOrEmpty(error))
+                {
+                    return new ResultData() { Code=1};
+                }
+                return new ResultData() { Code= 0, Message=error };
+            }
+            public static ResultData<T> ReData<T>(T data)
+            { 
+              return  new ResultData<T>() { Code=0, Data=data};
+            }
+            public int Code { get; set; }
+            public string Message { get; set; }
+        }
+        public object Upload(List<IFormFile> files)
+        {
+            var request = Request;
+            string action = request.Query["action"];
+            string hash = request.Query["hash"];
+            var fileName = request.Form["fileName"];
+            var fileExt = Path.GetExtension(fileName).ToLower();
+            string upPath = webHostEnvironment.WebRootPath + "/upload/";
+            int fileCount = files.Count;
+            if (fileCount < 1)
+                return "数量错误";
+            if (string.IsNullOrEmpty(hash))
+            {
+                //普通上传
+                var file = files[0];
+                if (string.IsNullOrEmpty(fileName))
+                    fileName = file.FileName;
+                var path = upPath;
+                var fillPath = path + fileName;
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+                var fs = System.IO.File.Create(fillPath);
+                file.CopyTo(fs);
+                fs.Close();
+            }
+            else
+            {
+                //秒传或断点续传
+                string path_ok = upPath + hash + fileExt;
+                string pathTmp = Name2Tmp(path_ok);
+                if (System.IO.File.Exists(path_ok))
+                {
+                    return "";
+                }
+                if (fileCount > 0)
+                {
+                    var file = files[0];
+                    using (var fs = System.IO.File.Open(pathTmp, FileMode.Append))
+                    {
+                        file.CopyTo(fs);
+                    }
+                }
+                bool isOk = request.Query["ok"] == "1";
+                if (!isOk)
+                    return "1";
+                if (System.IO.File.Exists(pathTmp))
+                    System.IO.File.Move(pathTmp, path_ok);
+            }
+            return "";
+        }
+        #region MyRegion
+
         public class ExportBooksReq:IDto
         {
             public int SiteId { get; set; }
@@ -117,5 +217,6 @@ namespace SSCMS.Web.Controllers.Admin.HManage
             public string InfoType { get; set; }
 
         }
+        #endregion
     }
 }

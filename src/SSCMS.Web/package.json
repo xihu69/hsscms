@@ -75,7 +75,7 @@
         "order": 112
       },
 	  "site_settings_users": {
-        "text": "站点用户",
+        "text": "站点管理",
         "type": ["web"],
         "order": 113
       },
@@ -492,7 +492,7 @@
     },
     "menus": {
       "site_settings_users": {
-        "text": "站点用户",
+        "text": "站点管理",
         "type": [ "web" ],
         "permissions": [ "site_settings_users" ],
         "order": 113,
@@ -503,6 +503,13 @@
             "type": [ "web" ],
             "link": "./settings/siteUsers/",
             "order": 113,
+            "iconClass": "ion-android-contact"
+          },
+          "site_settings_users2": {
+            "text": "上传工具",
+            "type": [ "web" ],
+            "link": "./settings/siteUpload/",
+            "order": 114,
             "iconClass": "ion-android-contact"
           }
         }
